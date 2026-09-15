@@ -1,6 +1,13 @@
 # Introducción al DWES. Arquitecturas y tecnologías de programación web
 
+## Teoría
+- [JSP](./conceptos/jsp.md)
 
+
+## Ejercicios
+- [Método init() de un Servlet](./ejercicios/init.md)
+
+---
 ## Página principal del curso
 [VOLVER PÁGINA PRINCIPAL](https://github.com/profeMelola/DWES-00-2026-27)
 
