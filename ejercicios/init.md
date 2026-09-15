@@ -63,7 +63,26 @@ public class InitDemoServlet extends HttpServlet {
 
 --- 
 
-![alt text](image.png)
+## Responde a estas preguntas
 
 - ¿Por qué la hora no cambia al recargar?
 - Si guardaras un carrito de compra como atributo de instancia (en vez de HttpSession), ¿qué usuarios lo verían?
+
+---
+
+## Arquitectura de la práctica
+
+### MVC aplicado a este ejemplo
+
+| Capa MVC | Elemento | Responsabilidad |
+|---|---|---|
+| **Controlador** | `InitDemoServlet` | Recibe la petición, actualiza el estado y decide qué vista mostrar |
+| **Vista** | `resultado.jsp` | Presenta los datos (hora de inicialización, contador) sin lógica de negocio |
+| **Modelo** | `horaInicializacion`, `contadorPeticiones` | El estado/datos que se muestran |
+
+### A nivel de arquitectura: cliente-servidor
+
+MVC organiza el código *dentro* del servidor — es un patrón de diseño, no la arquitectura general. A nivel de arquitectura, esta práctica es **cliente-servidor**:
+
+- **Cliente** → el navegador. Envía la petición HTTP y se limita a mostrar el HTML que recibe.
+- **Servidor** → Tomcat (el contenedor de servlets). Recibe la petición, la procesa mediante el Servlet y devuelve la respuesta generada por la JSP.
