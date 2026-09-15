@@ -17,7 +17,7 @@ public class InitDemoServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         horaInicializacion = LocalDateTime.now().toString();
-        System.out.println(">>> init() ejecutado — instancia " + this.hashCode());
+        System.out.println(">>> init() ejecutado, instancia " + this.hashCode());
     }
 
     @Override
@@ -25,7 +25,7 @@ public class InitDemoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         contadorPeticiones++;
-        System.out.println(">>> doGet() nº " + contadorPeticiones + " — instancia " + this.hashCode());
+        System.out.println(">>> doGet() num " + contadorPeticiones + ", instancia " + this.hashCode());
 
         request.setAttribute("horaInit", horaInicializacion);
         request.setAttribute("contador", contadorPeticiones);
