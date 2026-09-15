@@ -1,11 +1,11 @@
 # Introducción al DWES. Arquitecturas y tecnologías de programación web
 
-## Teoría
+## Conceptos teóricos
 - [JSP](./conceptos/jsp.md)
 - [Maven](./conceptos/maven.md)
 
 
-## Ejercicios
+## Práctica
 - [Método init() de un Servlet](./ejercicios/init.md)
 
 ---
