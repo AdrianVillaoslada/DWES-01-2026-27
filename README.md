@@ -1,5 +1,8 @@
 # Introducción al DWES. Arquitecturas y tecnologías de programación web
 
+![alt text](image.png)
+<center><sub>https://ddi-dev.com/blog/programming/backend-development-key-languages-technologies-features-in-2020/</sub></center>
+
 ## Conceptos teóricos
 - [JSP](./conceptos/jsp.md)
 - [Maven](./conceptos/maven.md)
