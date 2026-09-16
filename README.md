@@ -20,6 +20,7 @@
 - [JakartaEE](./conceptos/Jakarta.pdf)
     - Ver por encima, con un Servlet y una JSP básicos para entender el flujo básico **request → controlador → modelo → vista → response** (esa culturilla legacy antes de saltar directo a Spring y así entender qué hacen por debajo  sus anotaciones)."
         - Spring Boot no sustituye Jakarta EE, lo construye encima: su Dispatcher­Servlet es, en el fondo, un único Servlet.
+    - [Versiones java en entornos empresariales](./conceptos/versiones-java.md)
     - [Servlets](./conceptos/Intro_Servlets.pdf)
     - [JSP](./conceptos/jsp.md)
 - [Maven](./conceptos/maven.md)
