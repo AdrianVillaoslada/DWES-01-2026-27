@@ -17,6 +17,12 @@ Trabajar con  Servlets/JSP: una página de inicio, un Servlet que reparte entre 
 
 ## Flujo de la práctica
 
+![alt text](image.png)
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
 ```
 index.html                AltaServlet                      JSP
     |                          |                             |
@@ -151,7 +157,7 @@ Va dentro de `WEB-INF` a propósito: es el mismo motivo que visteis en la págin
 
 El botón es un enlace normal (`<a href="alta">`) — un enlace siempre genera una petición `GET`, por eso cae en `doGet`.
 
-### 3. `AltaServlet.java`
+### 3. Controlador a completar: `AltaServlet.java`
 
 ```java
 
@@ -179,7 +185,7 @@ public class AltaServlet extends HttpServlet {
 }
 ```
 
-### 4. `formulario.jsp`
+### 4. Plantilla a completar: `formulario.jsp`
 
 ```jsp
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
@@ -234,7 +240,7 @@ public class AltaServlet extends HttpServlet {
 
 El `<select>` de tecnologías se genera con un `for` dentro de un scriptlet, recorriendo la lista que llegó del Servlet — ninguna opción está escrita a mano, si cambias el `.txt` cambia el formulario sin tocar el JSP.
 
-### 5. `confirmacion.jsp`
+### 5. Plantilla a completar:  `confirmacion.jsp`
 
 ```jsp
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
@@ -323,7 +329,7 @@ Sin `<scope>provided</scope>`: a diferencia de `jakarta.servlet-api` (que ya pon
 
 (Ojo: en Jakarta EE 9+ la URI cambió de `http://java.sun.com/jsp/jstl/core` — la versión "clásica" que se ve en tutoriales antiguos con `javax.*` — a `jakarta.tags.core`. Es el mismo cambio de espacio de nombres que ya visteis con `javax.servlet` → `jakarta.servlet`.)
 
-### 3. `formulario.jsp` con JSTL (versión completa)
+### 3. `formulario.jsp` con JSTL
 
 ```jsp
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
@@ -384,3 +390,5 @@ JSTL no cambia la arquitectura ni el flujo, solo limpia la vista.
 ---
 
 ## Ampliación: java.nio
+
+
