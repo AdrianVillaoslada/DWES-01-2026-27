@@ -80,9 +80,19 @@ public class InitDemoServlet extends HttpServlet {
 | **Vista** | `resultado.jsp` | Presenta los datos (hora de inicialización, contador) sin lógica de negocio |
 | **Modelo** | `horaInicializacion`, `contadorPeticiones` | El estado/datos que se muestran |
 
-### A nivel de arquitectura: cliente-servidor
+> MVC es un **patrón de diseño**, no una arquitectura: organiza el código *dentro* de la aplicación, pero no dice nada sobre cómo se despliega ni cómo se comunican cliente y servidor.
 
-MVC organiza el código *dentro* del servidor — es un patrón de diseño, no la arquitectura general. A nivel de arquitectura, esta práctica es **cliente-servidor**:
+### A nivel de arquitectura: cliente-servidor y monolítica
+
+
+| Eje | Pregunta que responde | En esta práctica |
+|---|---|---|
+| **Cliente-servidor** | ¿Quién habla con quién? | El navegador (cliente) envía la petición HTTP; Tomcat (servidor) la procesa y responde |
+| **Monolítica** | ¿Cuántas unidades se despliegan? | Toda la lógica (Servlet, JSP, estado) va en un único WAR desplegado en un único contenedor |
+| **MVC** | ¿Cómo se organiza el código internamente? | Servlet = Controlador, JSP = Vista, variables de estado = Modelo |
 
 - **Cliente** → el navegador. Envía la petición HTTP y se limita a mostrar el HTML que recibe.
 - **Servidor** → Tomcat (el contenedor de servlets). Recibe la petición, la procesa mediante el Servlet y devuelve la respuesta generada por la JSP.
+- **Monolito** → todo el servidor (Servlet + JSP + estado) es un único artefacto desplegado como una sola unidad; no hay servicios independientes desplegados por separado.
+
+Por tanto, esta práctica es a la vez cliente-servidor, monolítica y usa MVC internamente: los tres términos conviven porque describen ejes distintos (comunicación, despliegue y organización del código), no alternativas excluyentes.
