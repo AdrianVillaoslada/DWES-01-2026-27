@@ -168,7 +168,24 @@ Este es un eje distinto al de SPA-vs-MPA — trata sobre la **elección de lengu
 
 ---
 
-## 9. Chuleta
+## 9. Frameworks con motores de plantillas (MPA)
+
+| Framework | Lenguaje | Motor de plantillas | Patrón principal |
+|---|---|---|---|
+| **Jakarta EE** (Servlet + JSP) | Java | **JSP** (JavaServer Pages) | Servlet-based, más "bajo nivel" |
+| **Spring MVC** | Java | **Thymeleaf** (el estándar actual) — también soporta JSP, FreeMarker o Mustache | MVC |
+| **ASP.NET (.NET)** | C# | **Razor** (`.cshtml`) | MVC (Razor Pages o MVC clásico) |
+| **Django** | Python | **DTL** (Django Template Language) — motor propio | MVC (ellos lo llaman MTV: Model-Template-View) |
+| **Flask** | Python | **Jinja2** | Microframework, sin MVC forzado |
+| **Laravel** | PHP | **Blade** | MVC |
+| **Symfony** | PHP | **Twig** | MVC |
+| **Ruby on Rails** | Ruby | **ERB** (Embedded Ruby) | MVC |
+| **Express.js** | JavaScript (Node.js) | Sin motor por defecto — se elige: **EJS**, **Pug**, **Handlebars**... | Microframework, sin MVC forzado |
+
+
+---
+
+## 10. Chuleta
 
 - **SPA** = una sola "carcasa" HTML para siempre. El JS pide JSON, el JS construye el DOM. El servidor = solo proveedor de datos.
 - **MPA (Jakarta EE / Spring MVC+Thymeleaf)** = cada clic puede ser una página HTML nueva y completa, construida por el servidor antes de enviarla.
@@ -178,8 +195,9 @@ Este es un eje distinto al de SPA-vs-MPA — trata sobre la **elección de lengu
 
 ---
 
-## 10. Vídeo. Aplicaciones SPA vs MPA
+## 11. Vídeo. Aplicaciones SPA vs MPA
 
+Os recomiendo ver este vídeo aunque es de 2020 y no habla de Spring  ni ASP.NET...
 
 <p align="center">
   <a href="https://youtu.be/2z0FChkphvo?si=lIoq9FNCTByHMNhM">
