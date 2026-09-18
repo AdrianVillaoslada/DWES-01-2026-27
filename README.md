@@ -7,6 +7,7 @@
 ## Conceptos teóricos
 - [Introducción al desarrollo web](./conceptos/UT01_Introduccion_DWES.pdf)
 - [Qué sucede cuando escribes una URL en el navegador](./conceptos/url.md)
+- [SPA vs MPA](./conceptos/spa-vs-mpa-esquema.md)
 - [JakartaEE](./conceptos/Jakarta.pdf)
     - Ver por encima, con un Servlet y una JSP básicos para entender el flujo básico **request → controlador → modelo → vista → response** (esa culturilla legacy antes de saltar directo a Spring y así entender qué hacen por debajo  sus anotaciones)."
         - Spring Boot no sustituye Jakarta EE, lo construye encima: su Dispatcher­Servlet es, en el fondo, un único Servlet.
