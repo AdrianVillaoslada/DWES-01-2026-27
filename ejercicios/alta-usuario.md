@@ -290,9 +290,9 @@ Aquí ya no hace falta scriptlet: son solo expresiones EL leyendo los atributos 
 4. Cambiar una línea de `tecnologias.txt`, redesplegar y comprobar que el `<select>` cambia sin tocar ni una línea de JSP ni de Java.
 
 
-## Extensión opcional
+## Ampliación: validaciones
 
-Si os sobra tiempo: validad en `doPost` que `nombre` y `email` no lleguen vacíos (`request.getParameter("nombre") == null || ....isBlank()`), y si falla, reenviad otra vez a `formulario.jsp` con un mensaje de error como atributo, en lugar de ir a `confirmacion.jsp`.
+Validad en `doPost` que `nombre` y `email` no lleguen vacíos (`request.getParameter("nombre") == null || ....isBlank()`), y si falla, reenviad otra vez a `formulario.jsp` con un mensaje de error como atributo, en lugar de ir a `confirmacion.jsp`.
 
 ---
 
