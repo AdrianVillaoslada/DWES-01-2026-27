@@ -205,3 +205,10 @@ Os recomiendo ver este vídeo aunque es de 2020 y no habla de Spring  ni ASP.NET
   </a>
 </p>
 
+---
+
+## 12. Otros recursos
+
+Más de lo mismo... echadle un ojo
+
+https://github.com/joseluisgs/DesarrolloWebEntornosServidor-01-2026-2027/blob/main/06-web-dinamica.md
