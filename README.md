@@ -15,8 +15,10 @@
     - [Servlets](./conceptos/Intro_Servlets.pdf)
     - [JSP](./conceptos/jsp.md)
 - [Maven](./conceptos/maven.md)
-- [Api Stream](./conceptos/api-stream.md)
-- [Programación funcional](./conceptos/programacion-funcional.md)
+
+- Java Moderno
+    - [Api Stream](./conceptos/api-stream.md)
+    - [Programación funcional](./conceptos/programacion-funcional.md)
 
 
 ## Práctica
