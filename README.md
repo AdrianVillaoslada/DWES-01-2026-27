@@ -18,7 +18,7 @@
 - [Maven](./conceptos/maven.md)
 
 - Programación declarativa y reactiva con java
-    - [Comparativa java 1º curso vs java 2º curso]
+    - [Comparativa java 1º curso vs java 2º curso](./conceptos/comparativa_java_moderno.md)
     - [Api Stream](./conceptos/api-stream.md)
     - [Programación funcional](./conceptos/programacion-funcional.md)
 
