@@ -1,5 +1,18 @@
 # SPA vs MPA: ¿De dónde sale el HTML?
 
+1. [¿Quién construye el HTML final que pinta el navegador: el navegador (JavaScript) o el servidor?"](#1-quién-construye-el-html-final-que-pinta-el-navegador-el-navegador-javascript-o-el-servidor)
+2. [SPA: React / Angular](#2-spa-react--angular)
+3. [MPA: Jakarta EE (Servlet + JSP) y Spring MVC + Thymeleaf](#3-mpa-jakarta-ee-servlet--jsp-y-spring-mvc--thymeleaf)
+4. [El recorrido concreto de vuestro curso: 3 backends, misma familia MPA](#4-el-recorrido-concreto-de-vuestro-curso-3-backends-misma-familia-mpa)
+5. [Tabla comparativa completa](#5-tabla-comparativa-completa)
+6. [Cuándo elegir cada una — Ejemplos concretos](#6-cuándo-elegir-cada-una--ejemplos-concretos)
+7. [El problema del SEO en las SPA (y por qué los sitios "SEO-críticos" tienden a MPA)](#7-el-problema-del-seo-en-las-spa-y-por-qué-los-sitios-seo-críticos-tienden-a-mpa)
+8. [Por qué las apps críticas / corporativas / logísticas suelen elegir Java (Spring) o C# (.NET) con plantillas MVC](#8-por-qué-las-apps-críticas--corporativas--logísticas-suelen-elegir-java-spring-o-c-net-con-plantillas-mvc)
+9. [Frameworks con motores de plantillas (MPA)](#9-frameworks-con-motores-de-plantillas-mpa)
+10. [Chuleta](#10-chuleta)
+11. [Vídeo. Aplicaciones SPA vs MPA](#11-vídeo-aplicaciones-spa-vs-mpa)
+12. [Otros recursos](#12-otros-recursos)
+
 ## 1. ¿Quién construye el HTML final que pinta el navegador: el navegador (JavaScript) o el servidor?"
 
 | | SPA (React / Angular) | MPA (Jakarta EE, o Spring MVC + Thymeleaf) |
