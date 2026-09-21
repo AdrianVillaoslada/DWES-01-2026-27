@@ -1,4 +1,4 @@
-# Práctica final: alta de usuario con Servlet + JSP
+# Alta de usuario con Servlet + JSP
 
 ## Objetivo
 
