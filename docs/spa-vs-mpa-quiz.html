@@ -393,17 +393,17 @@ const QUESTIONS = [
     explanation: "PokeAPI es una API que sirve datos JSON (originalmente con Django + PostgreSQL, hoy también como JSON estático). No tiene interfaz propia: la consume cualquier cliente."
   },
   {
-    tag: "Ejemplo real",
-    prompt: "El script data-main=\"pokedex.js\" con require.js en pokemon.com/es/pokedex indica…",
+    tag: "Backend",
+    prompt: "Un banco necesita una aplicación crítica que va a mantenerse en producción 10-15 años. ¿Por qué suele elegirse Java (Spring) o C# (.NET) frente a un stack más moderno y de moda?",
     options: [
-      "Que usan React con Vite como bundler moderno",
-      "Un cargador de módulos AMD, típico de arquitecturas JS anteriores a React/Angular",
-      "Que la web no usa JavaScript en absoluto",
-      "Que es una API REST pura"
+      "Porque Java y C# son más rápidos de programar al principio",
+      "Por tipado estático, madurez del ecosistema y soporte a largo plazo, no por ser lo más vistoso",
+      "Porque no existen alternativas para hacer backend",
+      "Porque no se pueden exponer como API REST"
     ],
     correct: 1,
-    hint: "RequireJS era muy popular entre 2012 y 2016, antes de los bundlers actuales.",
-    explanation: "RequireJS es un cargador de módulos AMD anterior a Webpack/Vite y a los frameworks modernos. Su presencia sugiere una arquitectura JS más antigua (tipo Backbone.js + RequireJS), no React/Angular."
+    hint: "Piensa en qué pasa con un bug en producción en un sistema tipado vs uno sin tipar.",
+    explanation: "La robustez en software empresarial crítico no depende de qué framework parezca más moderno, sino del tipado estático (errores detectados en compilación, no en producción), la madurez del ecosistema y el soporte/compatibilidad garantizados durante 10+ años. Por eso Java/Spring y C#/.NET dominan banca, seguros y logística."
   }
 ];
 
