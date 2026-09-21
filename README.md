@@ -16,7 +16,8 @@
     - [JSP](./conceptos/jsp.md)
 - [Maven](./conceptos/maven.md)
 
-- Java Moderno
+- Programación declarativa y reactiva con java
+    - [Comparativa java 1º curso vs java 2º curso]
     - [Api Stream](./conceptos/api-stream.md)
     - [Programación funcional](./conceptos/programacion-funcional.md)
 
