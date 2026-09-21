@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPA vs MPA — Repaso</title>
+<style>
+  :root {
+    --ink: #1b2430;
+    --ink-soft: #4a5568;
+    --paper: #f4f5f7;
+    --card: #ffffff;
+    --line: #dfe3e8;
+    --server: #1b6fa8;
+    --server-soft: #e7f1f8;
+    --client: #c9691c;
+    --client-soft: #fbeee0;
+    --good: #1f8a4c;
+    --good-soft: #e6f5ec;
+    --bad: #c0392b;
+    --bad-soft: #fbeae7;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 64px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  header.top {
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+
+  .eyebrow .req { color: var(--client); }
+  .eyebrow .res { color: var(--server); }
+
+  h1 {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: clamp(24px, 5vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 6px 0 8px;
+  }
+
+  .sub {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+
+  /* Progress path */
+  .path {
+    display: flex;
+    gap: 5px;
+    margin: 22px 0 26px;
+  }
+  .node {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--line);
+    transition: background .25s ease;
+  }
+  .node.done.correct { background: var(--good); }
+  .node.done.wrong { background: var(--bad); }
+  .node.current { background: var(--ink); }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 100px;
+    background: var(--server-soft);
+    color: var(--server);
+    margin-bottom: 14px;
+  }
+
+  .qnum {
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    margin-bottom: 4px;
+  }
+
+  .prompt {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 18px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .opt {
+    text-align: left;
+    padding: 13px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, transform .1s ease;
+    font-family: inherit;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--ink); }
+  .opt:focus-visible { outline: 2px solid var(--server); outline-offset: 2px; }
+  .opt:active:not(:disabled) { transform: scale(0.99); }
+  .opt:disabled { cursor: default; }
+
+  .opt.pick-correct {
+    border-color: var(--good);
+    background: var(--good-soft);
+    font-weight: 600;
+  }
+  .opt.pick-wrong {
+    border-color: var(--bad);
+    background: var(--bad-soft);
+  }
+  .opt.reveal-correct {
+    border-color: var(--good);
+    background: var(--good-soft);
+  }
+
+  .hint-row {
+    margin-top: 14px;
+  }
+  .hint-btn {
+    background: none;
+    border: none;
+    color: var(--server);
+    font-size: 13.5px;
+    cursor: pointer;
+    padding: 2px 0;
+    font-family: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .hint-text {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .feedback.good { background: var(--good-soft); color: #16563a; }
+  .feedback.bad { background: var(--bad-soft); color: #7d261c; }
+  .feedback strong { display: block; margin-bottom: 4px; }
+
+  .nextrow {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 11px 20px;
+    border-radius: 8px;
+    border: none;
+    background: var(--ink);
+    color: #fff;
+    cursor: pointer;
+    transition: opacity .15s ease;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  /* Results screen */
+  .results h2 {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 22px;
+    margin: 0 0 6px;
+  }
+  .score-big {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 10px 0 4px;
+  }
+  .score-label { color: var(--ink-soft); font-size: 14px; margin-bottom: 22px; }
+
+  .review-item {
+    border-top: 1px solid var(--line);
+    padding: 14px 0;
+    font-size: 14px;
+  }
+  .review-item:first-of-type { border-top: none; }
+  .review-item .rq { font-weight: 600; margin-bottom: 6px; }
+  .review-item .ra { color: var(--ink-soft); }
+  .review-item .ra.wrong-answer { color: var(--bad); text-decoration: line-through; }
+  .review-item .ra.right-answer { color: var(--good); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; }
+  .dot.correct { background: var(--good); }
+  .dot.wrong { background: var(--bad); }
+
+  .btnrow {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  footer.note {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    margin-top: 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow"><span class="req">alumno&nbsp;→</span><span>servidor</span><span class="res">→&nbsp;respuesta</span></div>
+    <h1>SPA vs MPA — Repaso</h1>
+    <p class="sub">10 preguntas para tener clara la diferencia antes del examen. Sin nota, sin prisa: lee la explicación cada vez, acierte o no.</p>
+  </header>
+
+  <div class="path" id="path"></div>
+
+  <div id="stage" class="card"></div>
+
+  <footer class="note">Repaso de Desarrollo Web en Entorno Cliente / Servidor · 2º DAW</footer>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    tag: "Renderizado",
+    prompt: "¿Quién construye el HTML final que pinta el navegador en una SPA (React/Angular)?",
+    options: [
+      "El navegador, ejecutando JavaScript",
+      "El servidor, antes de enviar la respuesta",
+      "Ambos a la vez, siempre en la misma proporción",
+      "Ninguno, el HTML no cambia nunca"
+    ],
+    correct: 0,
+    hint: "Piensa en qué envía el servidor la primera vez: casi no hay HTML todavía.",
+    explanation: "En una SPA el servidor solo manda un HTML mínimo (casi vacío) y un bundle JS. Es el navegador quien, al ejecutar ese JS, construye el DOM."
+  },
+  {
+    tag: "SPA",
+    prompt: "Una vez cargada una SPA, ¿qué suele enviar el servidor cuando el usuario interactúa con la app (por ejemplo, abre el carrito)?",
+    options: [
+      "Una página HTML completa nueva",
+      "Datos en formato JSON",
+      "Solo CSS actualizado",
+      "Nada, todo ya estaba descargado"
+    ],
+    correct: 1,
+    hint: "Es el mismo formato que devuelve una API REST.",
+    explanation: "Tras la primera carga, el servidor de una SPA actúa como proveedor de datos: responde con JSON, y es el JS del cliente quien actualiza el DOM con esos datos."
+  },
+  {
+    tag: "MPA",
+    prompt: "En una app Jakarta EE con Servlet + JSP, ¿dónde se combinan los datos con la plantilla para generar el HTML?",
+    options: [
+      "En el servidor",
+      "En el navegador",
+      "En una CDN externa",
+      "En la base de datos"
+    ],
+    correct: 0,
+    hint: "El .war contiene tanto la lógica como las vistas.",
+    explanation: "El motor de plantillas JSP se ejecuta en el servidor: combina el modelo de datos Java con la plantilla y genera un HTML ya terminado antes de enviarlo."
+  },
+  {
+    tag: "API REST",
+    prompt: "Una API REST hecha con Spring (@RestController), ¿es una SPA o una MPA?",
+    options: [
+      "Es una SPA, porque usa Spring",
+      "Es una MPA, porque es Java",
+      "Ninguna de las dos: es solo un backend que habla JSON",
+      "Las dos a la vez, según el endpoint"
+    ],
+    correct: 2,
+    hint: "¿Devuelve HTML en algún momento?",
+    explanation: "Una API REST no tiene interfaz de usuario propia. No es SPA ni MPA: es el backend que cualquier cliente (una SPA, una app móvil...) puede consumir."
+  },
+  {
+    tag: "Plantillas",
+    prompt: "¿Qué motor de plantillas es el estándar actual recomendado para Spring MVC?",
+    options: ["Razor", "Thymeleaf", "Blade", "Twig"],
+    correct: 1,
+    hint: "Empieza por «Thyme», como la hierba.",
+    explanation: "Thymeleaf es el motor de plantillas recomendado hoy para Spring MVC, aunque Spring también soporta JSP, FreeMarker o Mustache."
+  },
+  {
+    tag: "Plantillas",
+    prompt: "¿Qué motor de plantillas usa ASP.NET (.NET) con C#?",
+    options: ["Razor", "ERB", "Jinja2", "Thymeleaf"],
+    correct: 0,
+    hint: "Los ficheros tienen extensión .cshtml.",
+    explanation: "ASP.NET usa Razor (.cshtml) como motor de plantillas para combinar código C# con HTML."
+  },
+  {
+    tag: "SEO",
+    prompt: "¿Por qué le cuesta a un rastreador de Google indexar bien una SPA pura?",
+    options: [
+      "Porque las SPA son ilegales para SEO",
+      "Porque el HTML inicial llega casi vacío, sin contenido real",
+      "Porque Google no permite indexar JavaScript nunca",
+      "Porque las SPA no tienen URLs"
+    ],
+    correct: 1,
+    hint: "Piensa en lo que hay en «Ver código fuente» antes de que se ejecute el JS.",
+    explanation: "El HTML crudo de una SPA suele ser un <div id=\"root\"></div> casi vacío. El contenido real solo aparece después de ejecutar el JS, y eso puede pasar desapercibido para un rastreador."
+  },
+  {
+    tag: "SEO",
+    prompt: "¿Para qué sirven herramientas como Next.js (React) o Angular Universal?",
+    options: [
+      "Para sustituir completamente a React/Angular por otro lenguaje",
+      "Para renderizar en el servidor el primer HTML de una app React/Angular (SSR/SSG)",
+      "Para eliminar la necesidad de una API",
+      "Para convertir una SPA en una base de datos"
+    ],
+    correct: 1,
+    hint: "Resuelven justo el problema de la pregunta anterior.",
+    explanation: "Next.js y Angular Universal permiten pre-renderizar en el servidor el HTML inicial (SSR o SSG), resolviendo el problema de SEO sin renunciar a la interactividad SPA después de esa primera carga."
+  },
+  {
+    tag: "Ejemplo real",
+    prompt: "PokeAPI (pokeapi.co) es un ejemplo de…",
+    options: [
+      "Una MPA hecha con Jakarta EE",
+      "Una API REST/JSON pura (backend en Django), consumible por cualquier cliente",
+      "Una SPA hecha con Angular",
+      "Un CMS de WordPress"
+    ],
+    correct: 1,
+    hint: "Recuerda el framework Python que la construye.",
+    explanation: "PokeAPI es una API que sirve datos JSON (originalmente con Django + PostgreSQL, hoy también como JSON estático). No tiene interfaz propia: la consume cualquier cliente."
+  },
+  {
+    tag: "Ejemplo real",
+    prompt: "El script data-main=\"pokedex.js\" con require.js en pokemon.com/es/pokedex indica…",
+    options: [
+      "Que usan React con Vite como bundler moderno",
+      "Un cargador de módulos AMD, típico de arquitecturas JS anteriores a React/Angular",
+      "Que la web no usa JavaScript en absoluto",
+      "Que es una API REST pura"
+    ],
+    correct: 1,
+    hint: "RequireJS era muy popular entre 2012 y 2016, antes de los bundlers actuales.",
+    explanation: "RequireJS es un cargador de módulos AMD anterior a Webpack/Vite y a los frameworks modernos. Su presencia sugiere una arquitectura JS más antigua (tipo Backbone.js + RequireJS), no React/Angular."
+  }
+];
+
+let current = 0;
+let selected = null;
+let answered = false;
+let hintShown = false;
+const record = []; // { correct: bool, pickedIdx: number }
+
+const stage = document.getElementById("stage");
+const pathEl = document.getElementById("path");
+
+function renderPath() {
+  pathEl.innerHTML = "";
+  QUESTIONS.forEach((_, i) => {
+    const n = document.createElement("div");
+    n.className = "node";
+    if (i < record.length) {
+      n.classList.add("done", record[i].correct ? "correct" : "wrong");
+    } else if (i === current) {
+      n.classList.add("current");
+    }
+    pathEl.appendChild(n);
+  });
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  hintShown = false;
+  answered = false;
+  selected = null;
+
+  stage.innerHTML = `
+    <div class="tag">${q.tag}</div>
+    <div class="qnum">Pregunta ${current + 1} de ${QUESTIONS.length}</div>
+    <p class="prompt">${q.prompt}</p>
+    <div class="options" id="options"></div>
+    <div class="hint-row">
+      <button class="hint-btn" id="hintBtn" type="button">¿Una pista?</button>
+      <div class="hint-text" id="hintText" style="display:none;"></div>
+    </div>
+    <div id="feedbackZone"></div>
+  `;
+
+  const optsWrap = document.getElementById("options");
+  q.options.forEach((text, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.type = "button";
+    b.textContent = text;
+    b.addEventListener("click", () => pick(idx));
+    optsWrap.appendChild(b);
+  });
+
+  document.getElementById("hintBtn").addEventListener("click", () => {
+    hintShown = true;
+    document.getElementById("hintText").style.display = "block";
+    document.getElementById("hintText").textContent = q.hint;
+    document.getElementById("hintBtn").style.display = "none";
+  });
+
+  renderPath();
+}
+
+function pick(idx) {
+  if (answered) return;
+  answered = true;
+  selected = idx;
+  const q = QUESTIONS[current];
+  const isCorrect = idx === q.correct;
+  record[current] = { correct: isCorrect, pickedIdx: idx };
+
+  const buttons = document.querySelectorAll(".opt");
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === idx && isCorrect) btn.classList.add("pick-correct");
+    if (i === idx && !isCorrect) btn.classList.add("pick-wrong");
+    if (i === q.correct && !isCorrect) btn.classList.add("reveal-correct");
+  });
+
+  const zone = document.getElementById("feedbackZone");
+  const fb = document.createElement("div");
+  fb.className = "feedback " + (isCorrect ? "good" : "bad");
+  fb.innerHTML = `<strong>${isCorrect ? "Correcto." : "No es esa."}</strong>${q.explanation}`;
+  zone.appendChild(fb);
+
+  const nextRow = document.createElement("div");
+  nextRow.className = "nextrow";
+  const btn = document.createElement("button");
+  btn.className = "btn";
+  btn.type = "button";
+  btn.textContent = current === QUESTIONS.length - 1 ? "Ver resultado" : "Siguiente";
+  btn.addEventListener("click", () => {
+    current++;
+    if (current >= QUESTIONS.length) {
+      renderResults();
+    } else {
+      renderQuestion();
+    }
+  });
+  nextRow.appendChild(btn);
+  zone.appendChild(nextRow);
+
+  renderPath();
+}
+
+function renderResults() {
+  const total = QUESTIONS.length;
+  const correctCount = record.filter(r => r.correct).length;
+
+  let reviewHtml = "";
+  QUESTIONS.forEach((q, i) => {
+    const r = record[i];
+    reviewHtml += `
+      <div class="review-item">
+        <div class="rq"><span class="dot ${r.correct ? "correct" : "wrong"}"></span>${q.prompt}</div>
+        ${!r.correct ? `<div class="ra wrong-answer">${q.options[r.pickedIdx]}</div>` : ""}
+        <div class="ra right-answer">${q.options[q.correct]}</div>
+      </div>
+    `;
+  });
+
+  stage.innerHTML = `
+    <div class="results">
+      <h2>Repaso terminado</h2>
+      <div class="score-big">${correctCount}/${total}</div>
+      <div class="score-label">${scoreMessage(correctCount, total)}</div>
+      ${reviewHtml}
+      <div class="btnrow">
+        <button class="btn" id="restartBtn" type="button">Repetir</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("restartBtn").addEventListener("click", restart);
+  pathEl.innerHTML = "";
+  QUESTIONS.forEach((_, i) => {
+    const n = document.createElement("div");
+    n.className = "node done " + (record[i].correct ? "correct" : "wrong");
+    pathEl.appendChild(n);
+  });
+}
+
+function scoreMessage(correct, total) {
+  const pct = correct / total;
+  if (pct === 1) return "Perfecto. Lo tienes claro.";
+  if (pct >= 0.7) return "Muy bien — revisa las que has fallado antes del examen.";
+  if (pct >= 0.4) return "Vas por buen camino, repasa el esquema de nuevo.";
+  return "Toca releer el esquema con calma antes de repetir esto.";
+}
+
+function restart() {
+  current = 0;
+  record.length = 0;
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+
+</body>
+</html>
