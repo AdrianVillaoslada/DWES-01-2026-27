@@ -27,7 +27,7 @@
     - [Programación funcional](./conceptos/programacion-funcional.md)
 
 
-## Prácticas
+## Práctica
 - [Método init() de un Servlet](./ejercicios/init.md)
 - [Alta usuario. Métodos GET y POST](./ejercicios/alta-usuario.md)
 
