@@ -16,7 +16,10 @@
     - [Versiones java en entornos empresariales](./conceptos/versiones-java.md)
     - [Servlets](./conceptos/Intro_Servlets.pdf)
     - [JSP](./conceptos/jsp.md)
-- [Maven](./conceptos/maven.md)
+
+- Herramientas
+    - [Maven](./conceptos/maven.md)
+    - [Git/GitHub](./conceptos/git-github-intellij-guia.md)
 
 - Programación declarativa y reactiva con java
     - [Comparativa java 1º curso vs java 2º curso](./conceptos/comparativa_java_moderno.md)
