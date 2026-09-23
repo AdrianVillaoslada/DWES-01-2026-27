@@ -1,0 +1,9 @@
+Java
+Spring Boot
+Jakarta EE
+JavaScript
+React
+Node.js
+Python
+Docker
+kkkkkkk

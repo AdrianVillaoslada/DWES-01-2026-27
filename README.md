@@ -28,8 +28,8 @@
 
 
 ## Práctica
-- [Método init() de un Servlet](./ejercicios/init.md)
-- [Alta usuario. Métodos GET y POST](./ejercicios/alta-usuario.md)
+- [1. Método init() de un Servlet](./ejercicios/init.md)
+- [2. Alta usuario. Métodos GET y POST](./ejercicios/alta-usuario.md)
 
 ---
 ## Página principal del curso
