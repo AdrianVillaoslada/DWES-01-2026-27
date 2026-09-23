@@ -295,7 +295,7 @@ Aquí ya no hace falta scriptlet: son solo expresiones EL leyendo los atributos 
 Validad en `doPost` que `nombre` y `email` no lleguen vacíos (`request.getParameter("nombre") == null || ....isBlank()`), y si falla, reenviad otra vez a `formulario.jsp` con un mensaje de error como atributo, en lugar de ir a `confirmacion.jsp`.
 
 
-Ejemplo de error.jsp:
+### Ejemplo de error.jsp:
 
 ```html
 <%--
