@@ -16,6 +16,7 @@
     - [Versiones java en entornos empresariales](./conceptos/versiones-java.md)
     - [Servlets](./conceptos/Intro_Servlets.pdf)
     - [JSP](./conceptos/jsp.md)
+    - [Aclaración: ¿qué es Jakarta EE y quién hace cada cosa?](./conceptos/aclaracion-jakarta-ee.md)
 
 - Herramientas
     - [Maven](./conceptos/maven.md)
