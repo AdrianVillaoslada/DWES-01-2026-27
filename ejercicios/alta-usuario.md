@@ -294,8 +294,17 @@ Aquí ya no hace falta scriptlet: son solo expresiones EL leyendo los atributos 
 
 Validad en `doPost` que `nombre` y `email` no lleguen vacíos (`request.getParameter("nombre") == null || ....isBlank()`), y si falla, reenviad otra vez a `formulario.jsp` con un mensaje de error como atributo, en lugar de ir a `confirmacion.jsp`.
 
+Usad este estilo css:
+
+```css
+.error-msg { background: #FDEDEA; color: #E8432A; border: 1px solid #E8432A;
+      border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; font-weight: bold; }
+```
+
 
 ### Ejemplo de error.jsp:
+
+Para otras redirecciones a una página de error usad esta plantilla:
 
 ```html
 <%--
