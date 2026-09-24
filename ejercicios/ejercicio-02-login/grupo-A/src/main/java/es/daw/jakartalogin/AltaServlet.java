@@ -21,10 +21,12 @@ public class AltaServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            List<String> tecnologias = leerFichero("/WEB-INF/datos/tecnologiassss.txt");
+            List<String> tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
             LOGGER.info(tecnologias.toString());
 
-            //String opcional = request.getParameter("opcional").trim();
+            // Los parámetros vía get, si no viajan llegan como null!!!
+            // Si hago trim de opcional y no se ha enviado en la url como parámetro, dará un nullpointerexception
+            // String opcional = request.getParameter("opcional").trim();
 
             request.setAttribute("tecnologias",tecnologias);
 
@@ -64,6 +66,8 @@ public class AltaServlet extends HttpServlet {
 
         // Validar los parámetros!!!
         nombre = nombre.trim();
+
+        // Realmente los campos del formulario si no se rellenan llegan como caden vacía y no como null
         email = email == null ? null : email.trim();
         tecnologia = tecnologia == null ? null : tecnologia.trim();
         nivel = nivel == null ? null : nivel.trim();
@@ -75,6 +79,13 @@ public class AltaServlet extends HttpServlet {
 
         // PENDIENTE!!! si el nombre viene vacío que vuelva a la página del formulario indicando que
         // el nombre no puede estar vacío...
+
+        if (nombre.isBlank()){
+            request.setAttribute("mensaje","Majete!!! rellena el nombre que es obligatorio!!!!");
+            request.getRequestDispatcher("/formulario.jsp").forward(request,response);
+            return;
+        }
+        //------------------
 
 
         // Pendiente enviar a la jsp como atributos los parámetros..
@@ -98,6 +109,7 @@ public class AltaServlet extends HttpServlet {
     private List<String> leerFichero(String pathFile) throws IOException{
         List<String> lista = new ArrayList<>();
 
+        // getResourceAsStream abre un flujo de bytes (InputStream)
         InputStream is = getServletContext().getResourceAsStream(pathFile);
 
         // PENDIENTE!!! En vez de propagar IOException, implementar una excepción propia de tipo checked
@@ -106,11 +118,16 @@ public class AltaServlet extends HttpServlet {
             throw new IOException("No se encuentra el fichero de texto: "+pathFile);
 
 
+        // try con recursos: todo lo que se declara dentro del paréntesis se cierra automáticamente (close())
+        // InputStream -> bytes en crudo
+        // InputStreamReader -> convierte esos bytes en caracteres según el charset
+        // BufferedReader -> añade un buffer para leer línea a línea
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))){
             String linea;
             while( (linea = br.readLine()) != null){
                 if (!linea.isBlank())
-                    lista.add(linea.trim());
+                    //lista.add(linea.trim());
+                    lista.add(linea.strip());
 
             }
         }

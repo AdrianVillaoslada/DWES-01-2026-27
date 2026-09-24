@@ -23,17 +23,17 @@
         button { margin-top: 24px; background: #E8432A; color: #fff; border: none; padding: 12px 28px;
             border-radius: 8px; font-weight: bold; cursor: pointer; }
         button:hover { background: #c93a22; }
-        .error-msg {background: #FDEDEA; color:#E8432A; border: 1px solid #E8432A;
-        border-radius: 6px; padding: 10px 14 px; margin-bottom: 16px; font-weight: bold;}
-    </style>
+        .error-msg { background: #FDEDEA; color: #E8432A; border: 1px solid #E8432A;
+      border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; font-weight: bold; }    </style>
 </head>
 <body>
 <div class="form-card">
     <h1>Formulario de alta</h1>
 
-    <!-- AÑADIR UN DIV DE AVISO O ERROR -->
+    <!-- PENDIENTE!!!! SI EL NOMBRE ESTÁ VACÍO SE MOSTRARÁ UN MENSAJE DE ERROR -->
     <% if (request.getAttribute("mensaje") != null) {%>
-        <div class="error-msg"
+        <div class="error-msg">${mensaje}</div>
+    <%}%>
 
 
     <form action="alta" method="post">
