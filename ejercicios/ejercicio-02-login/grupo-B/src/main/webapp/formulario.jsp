@@ -29,10 +29,17 @@
       <input type="email" id="email" name="email" required>
 
       <label for="tecnologia">Tecnología con la que más te gustaría trabajar</label>
+      <!-- PENDIENTE!!! el select multiple y recoger múltiples valores de la lista -->
       <select id="tecnologia" name="tecnologia">
 
-            <!-- pendiente generar tantos options como tecnologías haya en el fichero -->
-            <option value=" "> </option>
+            <%
+                List<String> tecnologias = (List<String>)request.getAttribute("tecnologias");
+
+                for(String t: tecnologias){
+            %>
+                <option value="<%=t%>"><%=t%></option>
+
+            <% } %>
 
 
       </select>
