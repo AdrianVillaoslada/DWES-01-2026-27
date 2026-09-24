@@ -81,6 +81,12 @@ Ejemplo mínimo:
 
 ```
 
+Se pueden hacer imports por separado:
+
+```
+<%@ page import="java.util.List" %>
+```
+
 ### Directiva include
 
 ```
@@ -96,22 +102,7 @@ Ejemplo mínimo:
 ```
 ---
 
-## Acciones JSP
 
-<jsp:include> → incluye contenido dinámicamente.
-
-<jsp:forward> → redirige a otra página.
-
-<jsp:useBean> → trabaja con JavaBeans.
-
-```
-<jsp:useBean id="usuario" class="com.ejemplo.Usuario" scope="session" />
-<jsp:setProperty name="usuario" property="nombre" value="Ana" />
-<p>Bienvenida, <jsp:getProperty name="usuario" property="nombre" />!</p>
-
-```
-
---- 
 ## Declaración de Objetos Implicitos: JSP proporciona objetos implícitos para interactuar con la solicitud, respuesta, sesión y contexto de aplicación:
 
 Al igual que en los servlets desde JSP también es posible acceder a la petición request y otros objetos implícitos.
@@ -123,6 +114,12 @@ Al igual que en los servlets desde JSP también es posible acceder a la petició
 - **out:** Representa el objeto de escritura de la respuesta.
 - **config:** Representa la configuración del servlet.
 - **pageContext:** Proporciona un contexto de página más amplio.
+
+Ejemplo visto en clase:
+
+```
+<a class="boton" href="${pageContext.request.contextPath}/alta">Darme de alta</a>
+```
 
 --- 
 
@@ -169,3 +166,24 @@ Al igual que en los servlets desde JSP también es posible acceder a la petició
   - Presentación → JSP
   - Lógica de negocio → Java (servlets, servicios).
   - Usar codificación UTF-8 siempre para evitar problemas de caracteres.
+
+---
+
+# Ejemplos de JSTL vistos en clase
+
+```
+<a class="boton" href="<c:url value='/alta'/>">Darme de alta</a>
+
+<select id="nivel" name="nivel" multiple>
+          <c:set var="nivelesSel" value=",${fn:join(niveles, ',')},"/>
+          <option value="Principiante" ${fn:contains(nivelesSel, ',Principiante,') ? 'selected' : ''}>Principiante</option>
+          <option value="Intermedio" ${fn:contains(nivelesSel, ',Intermedio,') ? 'selected' : ''}>Intermedio</option>
+          <option value="Avanzado" ${fn:contains(nivelesSel, ',Avanzado,') ? 'selected' : ''}>Avanzado</option>
+</select>
+
+
+<c:forEach var="t" items="${tecnologias}">
+    <option value="${t}" ${t == tecnologia ? 'selected': ''}>${t}</option>
+</c:forEach>
+
+```
