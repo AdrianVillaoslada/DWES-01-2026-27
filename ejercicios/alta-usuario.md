@@ -524,7 +524,7 @@ Uso de java.nio:
 
 - **[Siguiendo al profesor]** Cuando el `nombre` llegue vacío, al reenviar otra vez a `formulario.jsp` con un mensaje de error, que no se pierdan los datos introducidos previamente en el formulario. En el caso de las listas, que no se pierda la selección.
 - **[Siguiendo al profesor]**  Hacer la lista de niveles de selección múltiple. Debes usar ```request.getParameterValues("nivel")```
-- **[El alumno]** Uso de la excepción propia `FicheroNoEncontradoException`.
+- **[El alumno]** Uso de la excepción propia `FicheroTxtParaLasListasNoEncontradoException`. Se propaga en el método que lee el fichero...
 - **[El alumno]** La lista de niveles que se carguen de un fichero de texto al igual que las tecnologías.
 - **[El alumno]** Refactorizar y crear un paquete util, con la clase FileUtil y los métodos de lectura del fichero.
 
