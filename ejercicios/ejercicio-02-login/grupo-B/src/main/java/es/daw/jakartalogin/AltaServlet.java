@@ -4,8 +4,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -18,18 +20,11 @@ public class AltaServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(AltaServlet.class.getName());
 
+    private List<String> tecnologias = new ArrayList<>();
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // Leer el fichero de texto tecnologias.txt y cargar en un ArrayList
-        List<String> tecnologias = new ArrayList<>();
-
-        //
-        String paramChungo = request.getParameter("chungo");
-        paramChungo = paramChungo == null ? "" : paramChungo.strip();
-
-
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         try {
             tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
 
@@ -37,10 +32,36 @@ public class AltaServlet extends HttpServlet {
 
         } catch (IOException e) {
             // Si no existe el fichero, quiero devolver un error.html!!!! (error.jsp con el mensaje dinámico)
-            request.setAttribute("mensajeError", e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request,response);
+//            request.setAttribute("mensajeError", e.getMessage());
+//            request.getRequestDispatcher("/error.jsp").forward(request,response);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Leer el fichero de texto tecnologias.txt y cargar en un ArrayList
+        // List<String> tecnologias = new ArrayList<>();
+
+        //
+        String paramChungo = request.getParameter("chungo");
+        paramChungo = paramChungo == null ? "" : paramChungo.strip();
+
+
+//        try {
+//            tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
+//
+//            LOGGER.info("Lista de tecnologias: " + tecnologias);
+//
+//        } catch (IOException e) {
+//            // Si no existe el fichero, quiero devolver un error.html!!!! (error.jsp con el mensaje dinámico)
+//            request.setAttribute("mensajeError", e.getMessage());
+//            request.getRequestDispatcher("/error.jsp").forward(request,response);
+//
+//        }
 
         request.setAttribute("tecnologias", tecnologias);
         request.getRequestDispatcher("/formulario.jsp").forward(request,response);
@@ -61,8 +82,18 @@ public class AltaServlet extends HttpServlet {
         String tecnologia = request.getParameter("tecnologia");
         String nivel = request.getParameter("nivel");
 
-        // PENDIENTE!!! hacer validaciones...
+        // PENDIENTE!!! hacer todas validaciones...
+        //-------------------------------------
+        // Si el nombre viene vacío tenemos que redirigir al formulario indicando un mensaje de aviso
+        if (nombre.isBlank()) {
+            request.setAttribute("mensajeError", "Majete!!! El nombre es obligatorio");
+            //request.setAttribute("tecnologias", leerFichero("/WEB-INF/datos/tecnologias.txt"));
+            request.setAttribute("tecnologias", tecnologias);
+            request.getRequestDispatcher("/formulario.jsp").forward(request,response);
+            return;
+        }
 
+        //--------------------------------------------
         // ---------------
         // Aquí estaría toda la lógica para comprobar que el usuario no exista en Bd, si no existe darlo alta por
         // tanto hacer un insert...
@@ -70,15 +101,7 @@ public class AltaServlet extends HttpServlet {
         //-----------
 
 
-        //-------------------------------------
-        // PENDIENTE!!! Si el nombre viene vacío tenemos que redirigir al formulario indicando un mensaje de aviso
-        if (nombre.isBlank()) {
-            request.setAttribute("mensajeError", "Majete!!! El nombre es obligatorio");
-            request.getRequestDispatcher("/formulario.jsp").forward(request,response);
-            return;
-        }
 
-        //--------------------------------------------
 
         request.setAttribute("tecnologia", tecnologia);
         request.setAttribute("nombre", nombre);
