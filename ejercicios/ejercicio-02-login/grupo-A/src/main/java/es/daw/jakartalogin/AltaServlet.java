@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -16,13 +17,26 @@ public class AltaServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(AltaServlet.class.getName());
 
+    private List<String> tecnologias = new ArrayList<>();
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        try {
+            tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
+        }catch (IOException e){
+            LOGGER.severe(e.getMessage());
+        }
+
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        try {
-            List<String> tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
-            LOGGER.info(tecnologias.toString());
+//        try {
+//            List<String> tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
+//            LOGGER.info(tecnologias.toString());
 
             // Los parámetros vía get, si no viajan llegan como null!!!
             // Si hago trim de opcional y no se ha enviado en la url como parámetro, dará un nullpointerexception
@@ -32,16 +46,16 @@ public class AltaServlet extends HttpServlet {
 
             request.getRequestDispatcher("/formulario.jsp").forward(request,response);
 
-        }catch (IOException e){
-            // PENDIENTE!!!! enviar a una paǵina error.jsp de error el mensaje de error...
-            LOGGER.severe(e.getMessage());
-
-            // Añadir como atributo el mensaje de error...
-            request.setAttribute("mensajeError",e.getMessage());
-
-            request.getRequestDispatcher("/error.jsp").forward(request,response);
-
-        }
+//        }catch (IOException e){
+//            // Enviar a una paǵina error.jsp de error el mensaje de error...
+//            LOGGER.severe(e.getMessage());
+//
+//            // Añadir como atributo el mensaje de error...
+//            request.setAttribute("mensajeError",e.getMessage());
+//
+//            request.getRequestDispatcher("/error.jsp").forward(request,response);
+//
+//        }
 
 
 
@@ -53,7 +67,7 @@ public class AltaServlet extends HttpServlet {
             throws ServletException, IOException {
 
 
-        // Leer todos los parámetros del formulario
+        // 1. LEER todos los parámetros del formulario
         String nombre = request.getParameter("nombre");
         String email = request.getParameter("email");
         String tecnologia = request.getParameter("tecnologia");
@@ -64,30 +78,35 @@ public class AltaServlet extends HttpServlet {
         LOGGER.info(String.format("tecnologia: %s",tecnologia));
         LOGGER.info(String.format("nivel: %s",nivel));
 
+        // 2. VALIDACIONES
         // Validar los parámetros!!!
-        nombre = nombre.trim();
+        nombre = nombre.strip();
 
         // Realmente los campos del formulario si no se rellenan llegan como caden vacía y no como null
         email = email == null ? null : email.trim();
         tecnologia = tecnologia == null ? null : tecnologia.trim();
         nivel = nivel == null ? null : nivel.trim();
 
-        // -----------------
-        // EN ESTE PUNTO SE COMPROBARÍA EN BD SI EXISTE UN USUARIO CON ESE NOMBRE... ETC...
-        // CONSIDERAMOS QUE TODO OK!!! LA LÓGICA DE NEGOCIO ES MUY SENCILLITA!!!!!
-        // ------------------------
-
-        // PENDIENTE!!! si el nombre viene vacío que vuelva a la página del formulario indicando que
+        // Si el nombre viene vacío que vuelva a la página del formulario indicando que
         // el nombre no puede estar vacío...
 
         if (nombre.isBlank()){
             request.setAttribute("mensaje","Majete!!! rellena el nombre que es obligatorio!!!!");
+            //request.setAttribute("tecnologias",leerFichero("/WEB-INF/datos/tecnologias.txt"));
+            request.setAttribute("tecnologias",tecnologias);
             request.getRequestDispatcher("/formulario.jsp").forward(request,response);
             return;
         }
         //------------------
+        // -----------------
+        // 3. PERSISTENCIA EN BD
+        // EN ESTE PUNTO SE COMPROBARÍA EN BD SI EXISTE UN USUARIO CON ESE NOMBRE... ETC...
+        // CONSIDERAMOS QUE TODO OK!!! LA LÓGICA DE NEGOCIO ES MUY SENCILLITA!!!!!
+        // ------------------------
 
 
+        // --------------------------------------------------------
+        // 4. PREPARAR LA SALIDA. LO QUE SE VA A DEVOLVER
         // Pendiente enviar a la jsp como atributos los parámetros..
         request.setAttribute("nombre",nombre);
         request.setAttribute("email",email);
