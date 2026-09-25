@@ -292,7 +292,7 @@ Aquí ya no hace falta scriptlet: son solo expresiones EL leyendo los atributos 
 
 ## Ampliación: validaciones
 
-Validad en `doPost` que `nombre` y `email` no lleguen vacíos (`request.getParameter("nombre") == null || ....isBlank()`), y si falla, reenviad otra vez a `formulario.jsp` con un mensaje de error como atributo, en lugar de ir a `confirmacion.jsp`.
+Validad en `doPost` que `nombre` no lleguen vacíos (`request.getParameter("nombre") == null || ....isBlank()`), y si falla, reenviad otra vez a `formulario.jsp` con un mensaje de error como atributo, en lugar de ir a `confirmacion.jsp`.
 
 Usad este estilo css:
 
@@ -442,5 +442,90 @@ JSTL no cambia la arquitectura ni el flujo, solo limpia la vista.
 ---
 
 ## Ampliación: java.nio
+
+Uso del Api Stream:
+
+```java
+        //......
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+
+            // br.lines() devuelve un Stream<String>: una "tubería" por la que van
+            // pasando las líneas del fichero, una a una, para irles aplicando operaciones.
+            return br.lines()
+                    // filter() se queda solo con las líneas que cumplen la condición.
+                    // isBlank() es true si la línea está vacía o solo tiene espacios
+                    // (por ejemplo, una línea en blanco al final del fichero).
+                    .filter(linea -> !linea.isBlank())
+
+                    // map() transforma cada línea que ha sobrevivido al filtro.
+                    // String::trim es una referencia a método: equivale a escribir
+                    // .map(linea -> linea.trim()), pero más corto — quita espacios
+                    // sobrantes al principio y al final de cada línea.
+                    .map(String::trim)
+
+                    // toList() recoge todo lo que ha pasado por la tubería y lo
+                    // convierte en una List<String> normal y corriente.
+                    // (Java 16+; en versiones anteriores se escribe
+                    //  .collect(Collectors.toList()) )
+                    .toList();
+        }
+```
+
+Uso de java.nio:
+
+```java
+    public static List<String> leerTecnologiasNIO(ServletContext sc) throws FicheroNoEncontradoException,IOException {
+
+        // A diferencia de las versiones anteriores, aquí NO abrimos un flujo hacia el recurso,
+        // sino que le pedimos al servidor la ruta REAL del fichero en el disco duro
+        // (por ejemplo: C:\tomcat\webapps\alta-usuario\WEB-INF\datos\tecnologias.txt).
+        // Con esa ruta ya podemos usar la API de ficheros de Java (java.nio.file) como con
+        // cualquier otro fichero del ordenador.
+        String rutaReal = sc.getRealPath("/WEB-INF/datos/tecnologias.txt");
+
+        // getRealPath() devuelve null cuando el servidor no puede traducir la ruta a una del disco.
+        // Pasa, por ejemplo, si la aplicación se ejecuta directamente desde el .war comprimido
+        // sin descomprimirlo en una carpeta. Por eso getResourceAsStream() (versiones 1 y 2)
+        // es la opción más portable.
+        // OJO: getRealPath() NO comprueba que el fichero exista. Si la ruta está bien formada
+        // pero el fichero no está, no llega null: el fallo aparece después, en Files.lines(),
+        // como una NoSuchFileException (que es una IOException).
+        if (rutaReal == null) {
+            throw new FicheroNoEncontradoException("No se pudo resolver la ruta real del fichero");
+        }
+
+        // Path.of() convierte el String en un objeto Path, que es como representa
+        // java.nio una ruta del sistema de ficheros (Java 11+; antes se usaba Paths.get()).
+        //
+        // Files.lines() abre el fichero y devuelve directamente un Stream<String> con sus líneas,
+        // leídas en UTF-8. Es un atajo: nos ahorra encadenar a mano
+        // InputStream -> InputStreamReader -> BufferedReader como en leerTecnologias2.
+        //
+        // El Stream se declara en un try-with-resources porque Files.lines() es "perezoso":
+        // va leyendo del fichero a medida que se recorren las líneas, así que el fichero
+        // permanece abierto mientras el Stream existe. Si no lo cerramos, el fichero queda abierto.
+        try (Stream<String> lineas = Files.lines(Path.of(rutaReal), StandardCharsets.UTF_8)) {
+
+            // La misma "tubería" que en leerTecnologias2:
+            // descartamos las líneas en blanco, quitamos los espacios de los extremos
+            // y recogemos el resultado en una List<String>.
+            return lineas.filter(l -> !l.isBlank())
+                    .map(String::trim)
+                    .toList();
+        }
+        // Al salir del try se cierra el Stream y, con él, el fichero.
+    }
+
+```
+
+
+## MEJORAS FINALES
+
+- Cuando el `nombre` llegue vacío, al reenviar otra vez a `formulario.jsp` con un mensaje de error, que no se pierdan los datos introducidos previamente en el formulario. En el caso de las listas, que no se pierda la selección.
+- Hacer la lista de niveles de selección múltiple. Debes usar ```request.getParameterValues("nivel")```
+- Uso de la excepción propia `FicheroNoEncontradoException`.
+- La lista de niveles que se carguen de un fichero de texto al igual que las tecnologías.
+- Refactorizar y crear un paquete util, con la clase FileUtil y los métodos de lectura del fichero.
 
 
