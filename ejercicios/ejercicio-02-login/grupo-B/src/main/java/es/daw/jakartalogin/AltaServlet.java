@@ -25,6 +25,10 @@ public class AltaServlet extends HttpServlet {
         // Leer el fichero de texto tecnologias.txt y cargar en un ArrayList
         List<String> tecnologias = new ArrayList<>();
 
+        //
+        String paramChungo = request.getParameter("chungo");
+        paramChungo = paramChungo == null ? "" : paramChungo.strip();
+
 
         try {
             tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
@@ -52,6 +56,7 @@ public class AltaServlet extends HttpServlet {
 
         // Recoger los datos del formulario!!! son parámetros!!!
         String nombre = request.getParameter("nombre");
+        LOGGER.info("El nombre: " + nombre);
         String email = request.getParameter("email");
         String tecnologia = request.getParameter("tecnologia");
         String nivel = request.getParameter("nivel");
@@ -64,6 +69,16 @@ public class AltaServlet extends HttpServlet {
         // BD Relacional -> primero con JDBC, luego con JPA y los Repositories de Spring...
         //-----------
 
+
+        //-------------------------------------
+        // PENDIENTE!!! Si el nombre viene vacío tenemos que redirigir al formulario indicando un mensaje de aviso
+        if (nombre.isBlank()) {
+            request.setAttribute("mensajeError", "Majete!!! El nombre es obligatorio");
+            request.getRequestDispatcher("/formulario.jsp").forward(request,response);
+            return;
+        }
+
+        //--------------------------------------------
 
         request.setAttribute("tecnologia", tecnologia);
         request.setAttribute("nombre", nombre);
