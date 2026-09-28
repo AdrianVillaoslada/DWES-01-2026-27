@@ -9,7 +9,7 @@ Esta guía sirve como referencia para la transición del estilo de programación
 | **Paradigma** | **Imperativo**: Decimos paso a paso las instrucciones al servidor. | **Declarativo**: Expresamos la lógica de negocio de forma fluida. |
 | **Modelado de DTOs** | Clases tradicionales con atributos privados, constructores interminables y métodos getter/setter (o uso de Lombok). | **Records**: Modelos de datos compactos, portadores de datos puros e inmutables por defecto definidos en una sola línea. |
 | **Filtrado / Transformación** | Control de flujo manual mediante bucles `for`/`foreach`, acumuladores `List.add()` y condicionales `if`. | **Stream API**: Procesamiento a través de tuberías fluidas de datos empleando operadores como `.filter()`, `.map()` y `.toList()`. |
-| **Paso de funciones** | Instanciación de clases anónimas, interfaces pesadas o herencia polimórfica compleja. | **Expresiones Lambda / Referencias a métodos**: Capacidad de pasar comportamiento y lógica por parámetro de forma directa (`::`). |
+| **Paso de funciones** | Interfaces pesadas o herencia polimórfica compleja. | **Expresiones Lambda / Referencias a métodos**: Capacidad de pasar comportamiento y lógica por parámetro de forma directa (`::`). |
 
 ---
 
