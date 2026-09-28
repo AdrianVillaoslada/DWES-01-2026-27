@@ -2,6 +2,8 @@
 
 Aplicación Jakarta EE mínima (Servlet + JSP + JSTL) que filtra y ordena personajes de Los Simpson usando **streams**.
 
+![alt text](image-4.png)
+
 ## Cómo arrancarla
 
 - JDK 25 · Tomcat 11 · Maven
