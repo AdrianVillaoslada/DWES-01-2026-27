@@ -3,9 +3,12 @@ package es.daw.jakartalogin;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import es.daw.jakartalogin.exception.TxtNoEncontradoException;
+import es.daw.jakartalogin.util.FileUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -23,8 +26,8 @@ public class AltaServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
-        }catch (IOException e){
+            tecnologias = FileUtil.leerFichero(getServletContext(),"/WEB-INF/datos/tecnologias.txt");
+        }catch (IOException | TxtNoEncontradoException e){
             LOGGER.severe(e.getMessage());
         }
 
@@ -71,21 +74,25 @@ public class AltaServlet extends HttpServlet {
         String nombre = request.getParameter("nombre");
         String email = request.getParameter("email");
         String tecnologia = request.getParameter("tecnologia");
-        String nivel = request.getParameter("nivel");
+        //String nivel = request.getParameter("nivel");
+        String[] niveles = request.getParameterValues("nivel");
 
         LOGGER.info("nombre: "+nombre);
         LOGGER.info(String.format("email: %s",email));
         LOGGER.info(String.format("tecnologia: %s",tecnologia));
-        LOGGER.info(String.format("nivel: %s",nivel));
+        //LOGGER.info(String.format("nivel: %s", niveles.toString())); // pinta código del objeto, no texto
+        LOGGER.info(String.format("nivel: %s", Arrays.toString(niveles)));
+
+
 
         // 2. VALIDACIONES
         // Validar los parámetros!!!
         nombre = nombre.strip();
 
         // Realmente los campos del formulario si no se rellenan llegan como caden vacía y no como null
-        email = email == null ? null : email.trim();
-        tecnologia = tecnologia == null ? null : tecnologia.trim();
-        nivel = nivel == null ? null : nivel.trim();
+//        email = email == null ? null : email.trim();
+//        tecnologia = tecnologia == null ? null : tecnologia.trim();
+//        //nivel = nivel == null ? null : nivel.trim();
 
         // Si el nombre viene vacío que vuelva a la página del formulario indicando que
         // el nombre no puede estar vacío...
@@ -94,6 +101,10 @@ public class AltaServlet extends HttpServlet {
             request.setAttribute("mensaje","Majete!!! rellena el nombre que es obligatorio!!!!");
             //request.setAttribute("tecnologias",leerFichero("/WEB-INF/datos/tecnologias.txt"));
             request.setAttribute("tecnologias",tecnologias);
+            request.setAttribute("email",email);
+            request.setAttribute("tecnologia",tecnologia);
+            //request.setAttribute("nivel",nivel);
+            request.setAttribute("niveles",niveles);
             request.getRequestDispatcher("/formulario.jsp").forward(request,response);
             return;
         }
@@ -111,7 +122,8 @@ public class AltaServlet extends HttpServlet {
         request.setAttribute("nombre",nombre);
         request.setAttribute("email",email);
         request.setAttribute("tecnologia",tecnologia);
-        request.setAttribute("nivel",nivel);
+        //request.setAttribute("nivel",nivel);
+        request.setAttribute("niveles",Arrays.toString(niveles));
 
         // Pendiente llamar a la página confirmacion.jsp
 
@@ -119,38 +131,38 @@ public class AltaServlet extends HttpServlet {
 
     }
 
-    /**
-     * Lee un fichero de texto
-     * @param pathFile ruta al fichero. Debe ser absoluta y encontrarse protegida en WEB-INF
-     * @return List de cadena de texto de cada linea
-     * @throws IOException si no existe la ruta
-     */
-    private List<String> leerFichero(String pathFile) throws IOException{
-        List<String> lista = new ArrayList<>();
-
-        // getResourceAsStream abre un flujo de bytes (InputStream)
-        InputStream is = getServletContext().getResourceAsStream(pathFile);
-
-        // PENDIENTE!!! En vez de propagar IOException, implementar una excepción propia de tipo checked
-        // llamada FicheroTxtNoEncontradoException...
-        if ( is == null)
-            throw new IOException("No se encuentra el fichero de texto: "+pathFile);
-
-
-        // try con recursos: todo lo que se declara dentro del paréntesis se cierra automáticamente (close())
-        // InputStream -> bytes en crudo
-        // InputStreamReader -> convierte esos bytes en caracteres según el charset
-        // BufferedReader -> añade un buffer para leer línea a línea
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))){
-            String linea;
-            while( (linea = br.readLine()) != null){
-                if (!linea.isBlank())
-                    //lista.add(linea.trim());
-                    lista.add(linea.strip());
-
-            }
-        }
-        return lista;
-    }
+//    /**
+//     * Lee un fichero de texto
+//     * @param pathFile ruta al fichero. Debe ser absoluta y encontrarse protegida en WEB-INF
+//     * @return List de cadena de texto de cada linea
+//     * @throws IOException si no existe la ruta
+//     */
+//    private List<String> leerFichero(String pathFile) throws TxtNoEncontradoException, IOException{
+//        List<String> lista = new ArrayList<>();
+//
+//        // getResourceAsStream abre un flujo de bytes (InputStream)
+//        InputStream is = getServletContext().getResourceAsStream(pathFile);
+//
+//        // PENDIENTE!!! En vez de propagar IOException, implementar una excepción propia de tipo checked
+//        // llamada FicheroTxtNoEncontradoException...
+//        if ( is == null)
+//            throw new TxtNoEncontradoException("No se encuentra el fichero de texto: "+pathFile);
+//
+//
+//        // try con recursos: todo lo que se declara dentro del paréntesis se cierra automáticamente (close())
+//        // InputStream -> bytes en crudo
+//        // InputStreamReader -> convierte esos bytes en caracteres según el charset
+//        // BufferedReader -> añade un buffer para leer línea a línea
+//        try(BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))){
+//            String linea;
+//            while( (linea = br.readLine()) != null){
+//                if (!linea.isBlank())
+//                    //lista.add(linea.trim());
+//                    lista.add(linea.strip());
+//
+//            }
+//        }
+//        return lista;
+//    }
 
 }

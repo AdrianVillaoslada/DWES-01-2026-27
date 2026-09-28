@@ -31,7 +31,8 @@
     <dl>
         <dt>Email</dt><dd>${email}</dd>
         <dt>Tecnología</dt><dd>${tecnologia}</dd>
-        <dt>Nivel</dt><dd>${nivel}</dd>
+<%--        <dt>Nivel</dt><dd>${nivel}</dd>--%>
+        <dt>Niveles</dt><dd>${niveles}</dd>
     </dl>
 
     <a href="${pageContext.request.contextPath}/index.jsp">&larr; Volver al inicio</a>

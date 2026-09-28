@@ -8,6 +8,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,7 +44,7 @@
         <input type="text" id="nombre" name="nombre">
 
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" required value="${email}">
 
         <label for="tecnologia">Tecnología con la que más te gustaría trabajar</label>
         <select id="tecnologia" name="tecnologia">
@@ -59,16 +60,35 @@
 <%--      %>--%>
 
             <c:forEach var="t" items="${tecnologias}">
-                <option value="${t}">${t}</option>
+                <option value="${t}" ${ t == tecnologia ? 'selected':''} >${t}</option>
             </c:forEach>
 
         </select>
 
         <label for="nivel">Tu nivel actual</label>
-        <select id="nivel" name="nivel">
-            <option value="Principiante">Principiante</option>
-            <option value="Intermedio">Intermedio</option>
-            <option value="Avanzado">Avanzado</option>
+        <select id="nivel" name="nivel" multiple>
+            <!-- CHUNGO EN OBSERVACIÓN PARA VER SI VÍA SCRIPTING PUEDO TENER UNA SOLUCIÓN SENCILLA -->
+<%--            <%--%>
+<%--                if (request.getAttribute("niveles") != null){--%>
+<%--                    String[] niveles = (String[])request.getAttribute("niveles");--%>
+<%--                    for (String nivel : niveles) {--%>
+<%--            %>--%>
+<%--                <option value="Principiante" ${'Principiante' == nivel ? 'selected':''} >Principiante</option>--%>
+<%--                <option value="Intermedio" ${'Intermedio' == nivel ? 'selected':''}>Intermedio</option>--%>
+<%--                <option value="Avanzado" ${'Avanzado' == nivel ? 'selected':''}>Avanzado</option>--%>
+<%--            <% }// end for--%>
+<%--            // Cuando niveles es null se pintan los tres options..--%>
+<%--                }else{%>--%>
+<%--                    <option value="Principiante" ${'Principiante' == nivel ? 'selected':''} >Principiante</option>--%>
+<%--                    <option value="Intermedio" ${'Intermedio' == nivel ? 'selected':''}>Intermedio</option>--%>
+<%--                    <option value="Avanzado" ${'Avanzado' == nivel ? 'selected':''}>Avanzado</option>--%>
+<%--            <%}%>--%>
+
+                    <c:set var="nivelesSeleccionados" value="${fn:join(niveles, ',')}"/>
+                    <option value="Principiante" ${ fn:contains(nivelesSeleccionados,'Principiante') ? 'selected':''} >Principiante</option>
+                    <option value="Intermedio" ${ fn:contains(nivelesSeleccionados,'Intermedio')? 'selected':''}>Intermedio</option>
+                    <option value="Avanzado" ${ fn:contains(nivelesSeleccionados,'Avanzado')? 'selected':''}>Avanzado</option>
+
         </select>
 
         <button type="submit">Enviar</button>
