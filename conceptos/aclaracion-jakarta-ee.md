@@ -1,5 +1,9 @@
 # Aclaración: ¿qué es Jakarta EE y quién hace cada cosa?
 
+![alt text](image-6.png)
+
+https://jakarta.ee/
+
 ## 1. ¿Qué es Jakarta EE?
 
 - Es un conjunto de **especificaciones**: normas públicas y gratuitas.
