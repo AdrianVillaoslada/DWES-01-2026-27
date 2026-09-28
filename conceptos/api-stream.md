@@ -51,6 +51,8 @@ El API Stream también se usa con **Java NIO**, de hecho, NIO.2 (desde Java 8) i
 ---
 ## Métodos más comunes
 
+[Principales interfaces funcionales: Predicate, Function, Consumer](./programacion-funcional.md#principales-interface-funcionales-de-javautilfunction)
+
 ### Operaciones intermedias
 
 | Método              | Qué hace                             | Ejemplo               |
