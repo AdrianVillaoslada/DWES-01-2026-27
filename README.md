@@ -31,6 +31,7 @@
 ## Práctica
 - [1. Método init() de un Servlet](./ejercicios/init.md)
 - [2. Alta usuario. Métodos GET y POST](./ejercicios/alta-usuario.md)
+- [3. Aprende API Stream con los Simpson](./ejercicios/simpsons.md)
 
 ---
 ## Página principal del curso
