@@ -174,13 +174,6 @@ Ejemplo visto en clase:
 ```
 <a class="boton" href="<c:url value='/alta'/>">Darme de alta</a>
 
-<select id="nivel" name="nivel" multiple>
-          <c:set var="nivelesSel" value=",${fn:join(niveles, ',')},"/>
-          <option value="Principiante" ${fn:contains(nivelesSel, ',Principiante,') ? 'selected' : ''}>Principiante</option>
-          <option value="Intermedio" ${fn:contains(nivelesSel, ',Intermedio,') ? 'selected' : ''}>Intermedio</option>
-          <option value="Avanzado" ${fn:contains(nivelesSel, ',Avanzado,') ? 'selected' : ''}>Avanzado</option>
-</select>
-
 
 <c:forEach var="t" items="${tecnologias}">
     <option value="${t}" ${t == tecnologia ? 'selected': ''}>${t}</option>
