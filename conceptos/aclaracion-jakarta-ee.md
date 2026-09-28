@@ -44,6 +44,15 @@ https://jakarta.ee/
   - Y también **colaboradores independientes**.
 - Es **código abierto** y está publicado en GitHub (`github.com/jakartaee`).
 
+
+### ¿Por qué nuestro proyecto JakartaEE 11 creado automáticamente por IntelliJ incluye otra dependencia?
+
+Revisa el pom.xml de tu proyecto de clase.
+
+**¿Ves algo raro?**
+
+![alt text](image-7.png)
+
 ---
 
 ## 4. Ojo: la API está casi «vacía»
