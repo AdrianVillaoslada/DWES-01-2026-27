@@ -6,12 +6,6 @@ Aplicación Jakarta EE mínima (Servlet + JSP + JSTL) que filtra y ordena person
 
 ![alt text](image-5.png)
 
-## Cómo arrancarla
-
-- JDK 25 · Tomcat 11 · Maven
-- `mvn package` → genera `target/simpsons.war`
-- Desplegar en Tomcat y abrir `http://localhost:8080/simpsons/`
-
 ## Estructura
 
 ```
