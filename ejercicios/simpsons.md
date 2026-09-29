@@ -1,8 +1,10 @@
 # Personajes de Springfield: primer contacto con el API Stream
 
+![alt text](image-4.png)
+
 Aplicación Jakarta EE mínima (Servlet + JSP + JSTL) que filtra y ordena personajes de Los Simpson usando **streams**.
 
-![alt text](image-4.png)
+![alt text](image-5.png)
 
 ## Cómo arrancarla
 
@@ -10,53 +12,63 @@ Aplicación Jakarta EE mínima (Servlet + JSP + JSTL) que filtra y ordena person
 - `mvn package` → genera `target/simpsons.war`
 - Desplegar en Tomcat y abrir `http://localhost:8080/simpsons/`
 
-## Estructura (el mismo reparto que usaremos en un futuro en Spring MVC)
+## Estructura
 
 ```
-modelo/Personaje.java              ← record con los datos de un personaje
-repositorio/PersonajeRepositorio   ← la "BD": una List.of(...) en memoria
-servicio/CriteriosBusqueda         ← lo que el usuario eligió en el formulario
-servicio/PersonajeServicio         ← AQUÍ están todos los streams
-controlador/PersonajesServlet      ← GET /personajes: lee parámetros → servicio → JSP
-WEB-INF/vistas/personajes.jsp      ← formulario + tabla de resultados
+modelo/Personaje.java               ← record con los datos de un personaje
+repositorio/PersonajeRepositorio    ← los datos (simulan un JSON o una BD)
+servicio/PersonajeServicio          ← AQUÍ están los streams
+controlador/PersonajesServlet       ← GET /personajes: parámetros → servicio → JSP
+clasico/ComparadorPorEdad           ← recordatorio de 1º (no lo usa la aplicación)
+WEB-INF/vistas/personajes.jsp       ← formulario + tabla
 ```
 
-Flujo de una petición:
+## Qué operación activa cada campo del formulario
 
-```
-Navegador ──GET /personajes?lugar=...&ordenarPor=edad──▶ Servlet
-Servlet ──CriteriosBusqueda──▶ Servicio ──stream()...toList()──▶ List<Personaje>
-Servlet ──request.setAttribute + forward──▶ JSP ──▶ tabla HTML
-```
+| Campo | Operación del stream |
+|---|---|
+| Lugar, Edad máxima | `filter(p -> ...)` |
+| Ordenar por, Descendente | `sorted(Comparator...)`, `reversed()` |
+| Mostrar como máximo | `limit(n)` |
+| (el resultado) | `toList()` (operación terminal) |
 
-## Qué operación de stream activa cada campo del formulario
+## Comparator: de 1º a 2º
 
-| Campo del formulario | Operación | Tipo |
-|---|---|---|
-| Nombre contiene, Lugar, Edad mín./máx., Solo familia Simpson | `filter(p -> ...)` | intermedia |
-| Ordenar por + Descendente | `sorted(Comparator.comparing(...))`, `reversed()` | intermedia |
-| Mostrar como máximo | `limit(n)` | intermedia |
-| (el resultado) | `toList()` | **terminal** |
-| Desplegable de lugares | `map(Personaje::lugar).distinct().sorted()` | intermedia + terminal |
-| Edad media | `mapToInt(Personaje::edad).average()` | terminal → `OptionalDouble` |
-| El mayor | `max(Comparator.comparingInt(...))` | terminal → `Optional` |
-| Tabla "¿Dónde están?" | `collect(groupingBy(..., counting()))` | terminal → `Map` |
-
-**Idea clave:** las operaciones *intermedias* devuelven otro stream y se pueden encadenar. La *terminal* cierra la tubería y produce el resultado. Hasta que no llega la terminal, no se ejecuta nada.
-
-## Lo mismo sin streams (como en 1º)
+**En 1º:** una clase aparte que implementa `Comparator` y define `compare()`.
 
 ```java
+public class ComparadorPorEdad implements Comparator<Personaje> {
+    @Override
+    public int compare(Personaje p1, Personaje p2) {
+        int resultado = Integer.compare(p1.edad(), p2.edad());
+        if (resultado == 0) {
+            resultado = p1.nombre().compareTo(p2.nombre());
+        }
+        return resultado;
+    }
+}
+```
+
+**En 2º:** el mismo Comparator, en una línea.
+
+```java
+Comparator.comparingInt(Personaje::edad).thenComparing(Personaje::nombre)
+```
+
+## Filtrar sin streams y con streams
+
+```java
+// 1º: bucle clásico
 List<Personaje> resultado = new ArrayList<>();
 for (Personaje p : personajes) {
     if (p.lugar().equals("Escuela Primaria") && p.edad() <= 12) {
         resultado.add(p);
     }
 }
-resultado.sort(...);   // y aún faltaría el límite...
-```
+Collections.sort(resultado, new ComparadorPorEdad());
+// ...y el límite aún habría que hacerlo a mano
 
-```java
+// 2º: stream
 personajes.stream()
         .filter(p -> p.lugar().equals("Escuela Primaria"))
         .filter(p -> p.edad() <= 12)
@@ -67,9 +79,6 @@ personajes.stream()
 
 ## Ejercicios propuestos
 
-1. Añadir un filtro por **ocupación** (desplegable generado con `map` + `distinct`, igual que los lugares).
-2. Añadir la opción **"ordenar por longitud del nombre"** en `crearComparador`.
-3. Mostrar la **suma de edades** de los resultados (`mapToInt(...).sum()`).
-4. Mostrar solo los **nombres** separados por comas: `map(Personaje::nombre)` + `Collectors.joining(", ")`.
-5. Comprobar con `anyMatch` si entre los resultados **hay algún menor** y mostrar un aviso.
-6. Reto: agrupar por **apellido** y enseñar qué familias tienen más de un miembro.
+1. Añadir un filtro por **ocupación**, que funcione igual que el de lugar.
+2. Añadir **"Ordenar por lugar"** (y, si empatan, por nombre).
+3. Añadir una casilla **"Solo familia Simpson"** que filtre por el atributo `principal`.
