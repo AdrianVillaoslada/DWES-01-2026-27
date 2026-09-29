@@ -17,6 +17,10 @@ clasico/ComparadorPorEdad           ← recordatorio de 1º (no lo usa la aplica
 WEB-INF/vistas/personajes.jsp       ← formulario + tabla
 ```
 
+## Recursos
+
+[Recursos iniciales del proyecto](./ejercicio-03-simpson/recursos)
+
 ## Qué operación activa cada campo del formulario
 
 | Campo | Operación del stream |
