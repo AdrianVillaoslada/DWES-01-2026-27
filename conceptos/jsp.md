@@ -179,4 +179,28 @@ Ejemplo visto en clase:
     <option value="${t}" ${t == tecnologia ? 'selected': ''}>${t}</option>
 </c:forEach>
 
+
+<c:if test="${not empty personajes}">
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Ocupación</th>
+            <th>Lugar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="p" items="${personajes}">
+            <tr>
+                <td>${p.nombreCompleto()}</td>
+                <td>${p.edad()}</td>
+                <td>${p.ocupacion()}</td>
+                <td>${p.lugar()}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</c:if>
+
 ```
