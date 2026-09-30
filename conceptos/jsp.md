@@ -179,6 +179,9 @@ Ejemplo visto en clase:
     <option value="${t}" ${t == tecnologia ? 'selected': ''}>${t}</option>
 </c:forEach>
 
+<c:if test="${not empty mensajeError}">
+    <div class="error-msg">${mensajeError}</div>
+</c:if>
 
 <c:if test="${not empty personajes}">
     <table>
