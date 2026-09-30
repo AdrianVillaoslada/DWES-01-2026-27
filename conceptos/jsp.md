@@ -172,17 +172,40 @@ Ejemplo visto en clase:
 # Ejemplos de JSTL vistos en clase
 
 ```
+<%-- Requisito: declarar la librería core de JSTL al principio del JSP --%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<%-- ========== c:url ========== --%>
+<%-- Genera la URL añadiendo el context path de la aplicación: '/alta' → '/miapp/alta'.
+     Si el navegador no acepta cookies, añade también el jsessionid (URL rewriting).
+     Comillas simples dentro porque el atributo href ya usa dobles. --%>
 <a class="boton" href="<c:url value='/alta'/>">Darme de alta</a>
 
 
+<%-- ========== c:forEach + ternario EL ========== --%>
+<%-- items: colección que se busca como atributo en page → request → session → application
+     (normalmente la ha puesto el servlet con request.setAttribute("tecnologias", ...)).
+     var: nombre de la variable que toma cada elemento en cada vuelta. --%>
 <c:forEach var="t" items="${tecnologias}">
+    <%-- Ternario EL: si t coincide con la tecnología elegida, escribe 'selected'.
+         Sirve para mantener la opción marcada al recargar el formulario.
+         En EL, == con Strings compara el contenido (como equals), no la referencia. --%>
     <option value="${t}" ${t == tecnologia ? 'selected': ''}>${t}</option>
 </c:forEach>
 
+
+<%-- ========== c:if + empty ========== --%>
+<%-- empty es true si el valor es null, "" o una colección/array/mapa vacío.
+     not empty → solo se pinta el div si hay mensaje de error.
+     c:if no tiene else: para el caso contrario se usa otro c:if con la condición negada. --%>
 <c:if test="${not empty mensajeError}">
+    <%-- ${...} escribe el valor tal cual, sin escapar HTML --%>
     <div class="error-msg">${mensajeError}</div>
 </c:if>
 
+
+<%-- ========== c:if + c:forEach (tabla) ========== --%>
+<%-- La tabla solo se genera si la lista existe y tiene elementos --%>
 <c:if test="${not empty personajes}">
     <table>
         <thead>
@@ -194,8 +217,12 @@ Ejemplo visto en clase:
         </tr>
         </thead>
         <tbody>
+        <%-- Una fila <tr> por cada personaje de la lista --%>
         <c:forEach var="p" items="${personajes}">
             <tr>
+                <%-- p es un record: se llama a su método accesor con paréntesis.
+                     Con un JavaBean (getNombre()) se escribiría ${p.nombre}.
+                     Con EL 6 (Jakarta EE 11), ${p.edad} también funciona con records. --%>
                 <td>${p.nombreCompleto()}</td>
                 <td>${p.edad()}</td>
                 <td>${p.ocupacion()}</td>
