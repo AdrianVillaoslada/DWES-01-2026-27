@@ -203,6 +203,49 @@ Spring Web MVC toma su nombre de este patrón.
 
 Se confunden porque muchos diagramas ponen Vista = Presentación, Controlador = Aplicación y Modelo = Datos. Se parecen, pero no son equivalentes.
 
+#### La palabra «modelo» significa tres cosas distintas
+
+Aquí está casi todo el lío: llamamos «modelo» a tres cosas que no son lo mismo.
+
+| Lo que llamamos «modelo» | Qué es en realidad | Dónde vive | En la práctica de los Simpson |
+|---|---|---|---|
+| **Entidades o clases de dominio** | Las clases Java que representan los datos del negocio | **No son una capa**: viajan por todas las capas | `Personaje` (paquete `modelo`) |
+| **Capa de datos** | El código que **guarda y recupera** esas entidades (BD, fichero, JSON…) | Capa de datos | `PersonajeRepositorio` |
+| **Modelo de MVC** | Los datos que el controlador **pasa a la vista** en una petición concreta | Capa de presentación | `request.setAttribute("personajes", lista)` |
+
+Dicho de otra forma: el **repositorio** sabe *dónde* están los datos; la **entidad** es *qué forma* tienen; el **modelo de MVC** es *qué parte* de esos datos se enseña en esta pantalla.
+
+#### Cada capa con un ejemplo: la práctica de los Simpson
+
+| Capa | Pregunta que responde | Clase | Qué hace |
+|---|---|---|---|
+| **Presentación** (aquí se aplica MVC) | ¿Qué me piden y qué muestro? | `PersonajesServlet` (Controlador) + `personajes.jsp` (Vista) | Lee los parámetros del formulario, llama al servicio, guarda el resultado en el request y hace `forward` a la JSP |
+| **Negocio** | ¿Qué reglas aplico? | `PersonajeServicio` | Filtra por lugar y edad, ordena y limita el resultado (los streams) |
+| **Datos** | ¿De dónde saco los datos y cómo los guardo? | `PersonajeRepositorio` | Devuelve todos los personajes (simula una BD o un JSON) |
+| *(Entidad, en todas)* | ¿Qué forma tiene un dato? | `Personaje` (record) | Solo datos: nombre, edad, lugar… |
+
+El recorrido de una petición:
+
+```
+Navegador ──GET /personajes?lugar=...──▶ PersonajesServlet      (presentación · Controlador)
+                                            │ llama a
+                                            ▼
+                                         PersonajeServicio      (negocio: filtra, ordena)
+                                            │ llama a
+                                            ▼
+                                         PersonajeRepositorio   (datos: obtiene todos)
+                                            │ devuelve List<Personaje>   ← entidades
+                                            ▼
+                     servlet: request.setAttribute("personajes", lista)  ← Modelo de MVC
+                                            │ forward
+                                            ▼
+Navegador ◀──────────── HTML ────────────  personajes.jsp       (presentación · Vista)
+```
+
+**Regla para no liarse:** el controlador no filtra ni calcula (eso es negocio) y el servicio no sabe nada de `request`, JSP ni HTML (eso es presentación). Si mañana los personajes vienen de MySQL, solo cambia el repositorio.
+
+En Spring será exactamente igual: `@Controller` + Thymeleaf (presentación), `@Service` (negocio), `@Repository` (datos), y las entidades serán clases con `@Entity`.
+
 **En aplicaciones muy pequeñas**, como la práctica del init, no hay capas de negocio ni de datos separadas: el servlet hace de controlador y los datos son variables. Ahí aplicamos **MVC**, pero apenas hay capas.
 
 ### Eje 4 · Integración entre sistemas
