@@ -257,7 +257,17 @@ En Spring será exactamente igual: `@Controller` + Thymeleaf (presentación), `@
 | **REST** | **Estilo de comunicación** sobre HTTP (recursos, verbos, sin estado) | Cómo hablan dos sistemas, no cómo se organizan |
 
 - **SOA no es «tener una API REST».** SOA puede implementarse con SOAP (lo clásico) o con REST (lo moderno). Y un back-end monolítico que expone una API REST para su propio front-end es cliente-servidor con REST, no SOA.
-- **Microservicios vs. SOA:** los microservicios se ven como una evolución de SOA, sin bus central, con una BD por servicio y despliegue autónomo.
+- **Microservicios vs. SOA:** los microservicios se ven como una evolución de SOA. La diferencia no es que SOA tenga «una BD central», sino quién es dueño de los datos y quién lleva la inteligencia de la comunicación:
+
+    | | SOA (clásico) | Microservicios |
+    |---|---|---|
+    | **Objetivo** | Integrar y reutilizar los sistemas de **toda una organización** (ERP, CRM, aplicaciones antiguas…) | Dividir **una aplicación** en piezas pequeñas e independientes |
+    | **Tamaño del servicio** | Grande: una función de negocio amplia | Pequeño: una tarea concreta |
+    | **Comunicación** | Muchas veces a través de un **bus (ESB)** que enruta, transforma y orquesta los mensajes. Es habitual, pero no obligatorio | Directa, con REST o mensajería ligera: la lógica está en los servicios, no en el canal |
+    | **Datos** | Cada sistema tiene sus BD y **compartir una BD entre servicios está permitido** y es frecuente | **Cada servicio es dueño de su BD** y ningún otro accede a ella directamente |
+    | **Despliegue** | Coordinado entre sistemas | Cada servicio se despliega por separado |
+
+    **Ejemplo:** en SOA, un banco publica «consultar cliente» como servicio para la web, la app, los cajeros y el sistema de préstamos, y por debajo puede tirar del mainframe de siempre. En microservicios, Netflix divide su plataforma en catálogo, recomendaciones, pagos…, cada uno con su propia BD y desplegado por separado.
 - **Programación orientada a eventos ≠ EDA:** `@EventListener` dentro de una misma aplicación Spring es organización interna del código (patrón Observer). Solo es EDA cuando **varios sistemas separados** se comunican mediante un broker (Kafka, RabbitMQ…).
 
 ### Ejemplo aplicado: la práctica del init
