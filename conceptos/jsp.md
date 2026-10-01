@@ -97,7 +97,7 @@ Se pueden hacer imports por separado:
 ### Directiva taglib
 
 ```
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
 ```
 ---
