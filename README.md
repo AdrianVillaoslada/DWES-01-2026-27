@@ -5,8 +5,7 @@
 
 
 ## Conceptos teóricos
-- [Introducción al desarrollo web](./conceptos/UT01_Introduccion_DWES.pdf)
-    - [Arquitecturas](./conceptos/arquitecturas-software.md)
+- [Introducción al desarrollo web](./conceptos/UT01_Introduccion_DWES.md)
 - [Qué sucede cuando escribes una URL en el navegador](./conceptos/url.md)
 - [SPA vs MPA](./conceptos/spa-vs-mpa-esquema.md)
     - [Quizziz](https://profemelola.github.io/DWES-01-2026-27/spa-vs-mpa-quiz)
