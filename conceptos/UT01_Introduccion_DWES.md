@@ -209,7 +209,7 @@ Aquí está casi todo el lío: llamamos «modelo» a tres cosas que no son lo mi
 
 | Lo que llamamos «modelo» | Qué es en realidad | Dónde vive | En la práctica de los Simpson |
 |---|---|---|---|
-| **Entidades o clases de dominio** | Las clases Java que representan los datos del negocio | **No son una capa**: viajan por todas las capas | `Personaje` (paquete `modelo`) |
+| **Entidades o clases de dominio** | Las clases Java que representan los datos del negocio | **No son una capa**: viajan por todas las capas | `Personaje` (paquete `modelo`, también llamado entidad o dominio) |
 | **Capa de datos** | El código que **guarda y recupera** esas entidades (BD, fichero, JSON…) | Capa de datos | `PersonajeRepositorio` |
 | **Modelo de MVC** | Los datos que el controlador **pasa a la vista** en una petición concreta | Capa de presentación | `request.setAttribute("personajes", lista)` |
 
