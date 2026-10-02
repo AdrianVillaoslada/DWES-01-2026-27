@@ -301,7 +301,6 @@ Navegador ──GET /personajes?lugar=...──▶ PersonajesServlet      (prese
 Navegador ◀──────────── HTML ────────────  personajes.jsp       (presentación · Vista)
 ```
 
-**Ojo con el nombre:** `Personaje` está en el paquete `modelo`, pero es una **entidad** (los datos del dominio), no el Modelo de MVC. En proyectos reales verás `model`, `entity` o `domain` para lo mismo.
 
 **Regla para no liarse:** el controlador no filtra ni calcula (eso es negocio) y el servicio no sabe nada de `request`, JSP ni HTML (eso es presentación). Si mañana los personajes vienen de MySQL, solo cambia el repositorio.
 
