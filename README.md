@@ -5,7 +5,7 @@
 
 
 ## Conceptos teóricos
-- [Introducción al desarrollo web](./conceptos/UT01_Introduccion_DWES.md)
+- [Introducción al desarrollo web. Arquitecturas](./conceptos/UT01_Introduccion_DWES.md)
 - [Qué sucede cuando escribes una URL en el navegador](./conceptos/url.md)
 - [SPA vs MPA](./conceptos/spa-vs-mpa-esquema.md)
     - [Quizziz](https://profemelola.github.io/DWES-01-2026-27/spa-vs-mpa-quiz)
@@ -25,6 +25,8 @@
     - [Comparativa java 1º curso vs java 2º curso](./conceptos/comparativa_java_moderno.md)
     - [Api Stream](./conceptos/api-stream.md)
     - [Programación funcional](./conceptos/programacion-funcional.md)
+
+- [Buenas prácticas de diseño](./conceptos/buenas-practicas.md)    
 
 
 ## Práctica

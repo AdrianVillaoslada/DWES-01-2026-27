@@ -1,17 +1,16 @@
 # UT01 · Introducción al desarrollo web en entorno servidor
 
-Arquitecturas, servidores, protocolo HTTP y APIs: los cimientos antes de entrar en Jakarta EE y Spring Boot.
+Aplicaciones web, HTTP, servidores, APIs y arquitecturas: los cimientos antes de entrar en Jakarta EE y Spring Boot.
 
 ## Índice
 
 1. [Aplicaciones web](#1-aplicaciones-web)
-2. [Servidores web y servidores de aplicaciones](#2-servidores-web-y-servidores-de-aplicaciones)
-3. [Arquitecturas de software](#3-arquitecturas-de-software)
-4. [El protocolo HTTP](#4-el-protocolo-http)
-5. [Servicios web y APIs](#5-servicios-web-y-apis)
-6. [Buenas prácticas de diseño: SOLID y patrones](#6-buenas-prácticas-de-diseño-solid-y-patrones)
-7. [Este módulo en la práctica](#7-este-módulo-en-la-práctica)
-8. [Errores típicos a evitar](#8-errores-típicos-a-evitar)
+2. [El protocolo HTTP](#2-el-protocolo-http)
+3. [Servidores web y servidores de aplicaciones](#3-servidores-web-y-servidores-de-aplicaciones)
+4. [Servicios web y APIs](#4-servicios-web-y-apis)
+5. [Arquitecturas de software](#5-arquitecturas-de-software)
+6. [Este módulo en la práctica](#6-este-módulo-en-la-práctica)
+7. [Errores típicos a evitar](#7-errores-típicos-a-evitar)
 
 Material relacionado: [SPA vs MPA](spa-vs-mpa-esquema.md) · [Qué pasa al escribir una URL](url.md) · [Aclaración Jakarta EE](aclaracion-jakarta-ee.md) · [Práctica del init](../ejercicios/init.md)
 
@@ -54,8 +53,8 @@ La comparación completa entre SPA y MPA está en [SPA vs MPA](spa-vs-mpa-esquem
 | | Front-end (cliente) | Back-end (servidor) |
 |---|---|---|
 | **Dónde se ejecuta** | En el navegador del usuario | En el servidor web o de aplicaciones |
-| **Tecnologías** | HTML y CSS (estructura y estilo), JavaScript (interactividad) | Java (Servlets/JSP, Spring), PHP, Python, .NET, Ruby… |
-| **Qué hace** | Animaciones, validaciones de formulario inmediatas, actualizar contenido sin recargar (AJAX) | Lógica de negocio, acceso a bases de datos, generación de contenido dinámico, seguridad |
+| **Tecnologías** | HTML y CSS (estructura y estilo), JavaScript (interactividad); React, Vue, Angular para SPA | Java (Servlets/JSP, Spring), PHP, Python, .NET, Ruby… |
+| **Qué hace** | Animaciones, validaciones de formulario inmediatas, actualizar contenido sin recargar (AJAX) | Lógica de negocio, acceso a bases de datos, generación de contenido dinámico y APIs, seguridad |
 
 **Regla práctica:** lo que se puede hacer sin preguntar al servidor (mostrar un menú, comprobar el formato de un email) puede ejecutarse en el cliente. Lo que necesita datos o reglas de negocio (comprobar usuario y contraseña en la base de datos) **tiene que** ejecutarse en el servidor. Una validación en el cliente nunca sustituye a la del servidor.
 
@@ -67,243 +66,15 @@ La comparación completa entre SPA y MPA está en [SPA vs MPA](spa-vs-mpa-esquem
 | **Back-end developer** | Lógica de negocio, acceso a datos y administración del servidor. Java (Servlets/JSP, Spring), PHP, Python, ASP.NET, Ruby… |
 | **Full-stack developer** | Conoce ambas partes sin ser necesariamente experto en una sola tecnología |
 
-### Tecnologías más usadas en cliente y servidor
-
-| Perfil | Entorno | Tecnología | Usos |
-|---|---|---|---|
-| Front-end | Navegador | HTML + CSS + JavaScript; React, Vue, Angular para SPA | Estructura, estilo e interactividad |
-| Back-end | Servidor + BD | Java (Servlets/JSP, Spring) · PHP · Python · .NET · Ruby | Lógica de negocio, acceso a datos, generación de páginas dinámicas y APIs |
-
-### Tendencia: el back-end como servicio universal
-
-El servidor expone su funcionalidad a través de **APIs** que cualquier cliente puede consumir: una SPA, una app móvil, una aplicación de escritorio u otro sistema. El back-end ya no está ligado a una interfaz concreta: devuelve datos en formatos estándar (**JSON**, XML) y cada cliente los representa a su manera.
-
 ### El desarrollo web actual: *time to market*
 
 No basta con que la aplicación funcione: también importa ponerla en manos de los usuarios cuanto antes (**time to market**), garantizando accesibilidad, estabilidad, escalabilidad y seguridad. Por eso el despliegue es parte del desarrollo, no un paso aparte.
 
 ---
 
-## 2. Servidores web y servidores de aplicaciones
+## 2. El protocolo HTTP
 
-| | Servidor web | Servidor de aplicaciones |
-|---|---|---|
-| **Qué hace** | Recibe peticiones HTTP/HTTPS y devuelve recursos **estáticos** (HTML, CSS, imágenes, JavaScript) | Proporciona un **entorno de ejecución** para aplicaciones: ejecuta código del servidor, procesa peticiones dinámicas (validar un login, generar un informe) y gestiona la lógica de negocio y el acceso a datos |
-| **Ejemplos** | Apache HTTP Server, Nginx, Microsoft IIS | Apache Tomcat (contenedor de servlets), WildFly, GlassFish, Payara |
-| **¿Puede ejecutar una aplicación Jakarta EE?** | No: no implementa la API de Servlet | Sí, si implementa las especificaciones que usa la aplicación |
-
-### Cómo se integran
-
-Es habitual poner un **servidor web delante del servidor de aplicaciones** como **proxy inverso**: Nginx o Apache reciben todas las peticiones, sirven directamente los recursos estáticos y reenvían las dinámicas a Tomcat.
-
-### Los servidores en el ecosistema Jakarta EE
-
-- **Tomcat** es un **contenedor web**: implementa solo algunas especificaciones (Servlet, JSP, Expression Language y WebSocket). **JSTL no viene incluido**: hay que añadirlo como dependencia.
-- **WildFly, GlassFish, Payara, Open Liberty…** implementan el perfil completo de Jakarta EE (CDI, JPA, EJB…). GlassFish es la implementación de referencia.
-- **Spring Boot** incluye un Tomcat **embebido**: la aplicación arranca con su propio servidor, sin instalarlo aparte.
-- **Node.js** es un entorno de ejecución de JavaScript en el servidor; sirve para comparar cómo distintos lenguajes resuelven el mismo problema.
-
-Quién define la API y quién la implementa (Eclipse Foundation, servidor, `scope provided`…) está explicado en [Aclaración Jakarta EE](aclaracion-jakarta-ee.md).
-
----
-
-## 3. Arquitecturas de software
-
-### La idea clave: son 4 preguntas distintas, no una lista de opciones excluyentes
-
-El error típico es tratar «monolítica», «cliente-servidor», «3 capas», «MVC», «microservicios», «SOA»… como si fueran alternativas de una misma pregunta. En realidad responden a **preguntas distintas**, y una misma aplicación tiene una respuesta para cada una **al mismo tiempo**.
-
-| Eje | Pregunta | Opciones típicas |
-|---|---|---|
-| **1. Comunicación** | ¿Quién pide y quién responde? | **Cliente-servidor** (prácticamente toda aplicación web) |
-| **2. Despliegue** | ¿En cuántas unidades se despliega la aplicación? ¿En cuántos niveles físicos se reparte? | Unidades: **monolítica** · **microservicios** · **serverless**<br>Niveles: **2** · **3** · **N niveles** |
-| **3. Organización interna del código** | ¿Cómo se reparten las responsabilidades dentro del código? | **Capas lógicas** (presentación / negocio / datos) · patrón **MVC** |
-| **4. Integración entre sistemas** | ¿Cómo se relacionan varios sistemas distintos? | **SOA** · **EDA** |
-
-**REST no es ningún eje:** es un estilo de comunicación sobre HTTP que puede usar cualquiera de las arquitecturas anteriores.
-
-**No hay una arquitectura «perfecta»:** la elección depende de los requisitos de cada proyecto.
-
-### Vocabulario: capa ≠ nivel
-
-| Término | Qué es | Pregunta a la que responde |
-|---|---|---|
-| **Capa** (*layer*) | Separación **lógica** del código por responsabilidades | ¿Qué parte del código hace cada cosa? |
-| **Nivel** (*tier*) | Separación **física**: procesos o máquinas distintos | ¿Dónde se ejecuta cada parte? |
-
-Varias capas lógicas pueden ejecutarse en un mismo nivel físico. Una aplicación con 3 capas lógicas puede estar desplegada en 1, 2 o 3 niveles. En este módulo, «capa» siempre es lógica y «nivel» siempre es físico: no hablamos de «capas físicas».
-
-### Eje 1 · Comunicación: cliente-servidor
-
-Un **cliente** (el navegador) envía una **petición** (GET, POST…) y un **servidor** la procesa y devuelve una **respuesta** (HTML, JSON, un código de estado…). La interfaz está en el cliente; la funcionalidad, en el servidor.
-
-| Ventajas | Desventajas |
-|---|---|
-| **Control centralizado:** el servidor gestiona accesos, recursos e integridad de los datos | **Congestión** si muchos clientes piden a la vez |
-| **Escalabilidad:** cliente y servidor crecen por separado | **Punto único de fallo:** si cae el servidor, ninguna petición se atiende |
-| **Portabilidad:** el navegador independiza la aplicación del sistema operativo | Puede requerir hardware y software específicos, con su coste |
-| **Mantenimiento sencillo:** se actualiza el servidor sin tocar los clientes | Se mitiga con balanceo de carga, caché, réplicas y clústeres |
-
-**Cliente-servidor no dice nada de cómo es el servidor por dentro.** Por eso **no es incompatible con monolítica**: cliente-servidor dice quién habla con quién; monolítica dice cuántas unidades se despliegan en el servidor. La inmensa mayoría de aplicaciones web sencillas son las dos cosas a la vez.
-
-### Eje 2 · Despliegue
-
-#### 2a. ¿En cuántas unidades se despliega la aplicación?
-
-| Arquitectura | Qué es | Unidades | Cuándo elegirla |
-|---|---|---|---|
-| **Monolítica** | Interfaz, lógica de negocio y acceso a datos en un solo bloque que se ejecuta en un mismo proceso | 1 (un WAR, un proceso) | Proyectos pequeños o equipos reducidos. Fácil de desarrollar y desplegar; difícil de mantener al crecer, y escalar implica escalar todo el bloque |
-| **Microservicios** | La aplicación se divide en servicios pequeños y autónomos, cada uno centrado en una tarea, con su propia BD y desplegado por separado | Muchas | Sistemas grandes con equipos separados. Ejemplo: **Netflix**, con buena parte de sus servicios en Spring Boot |
-| **Serverless** | El proveedor cloud gestiona toda la infraestructura; el equipo solo escribe funciones | Ninguna gestionada por ti | Funciones puntuales y picos de demanda variables. Escalado automático y pago por uso |
-
-#### 2b. ¿En cuántos niveles físicos se reparte?
-
-| Niveles | Ejemplo |
-|---|---|
-| **2 niveles** | Navegador → Tomcat, con los datos en memoria o en un fichero del propio servidor |
-| **3 niveles** | Navegador → Tomcat → MySQL en otra máquina |
-| **N niveles** | Navegador → balanceador → varios Tomcat → caché → BD |
-
-**Monolítica y 3 niveles son compatibles:** un único WAR en Tomcat que usa un MySQL en otra máquina es monolítico y está desplegado en 3 niveles.
-
-**Ojo con el «modelo de 3 niveles» de muchos diagramas:** dibujan la presentación en el navegador (HTML, CSS y JS ejecutándose en el cliente, típico de una SPA con API REST). Si el HTML se genera **en el servidor** (JSP, Thymeleaf), la vista no vive físicamente en el cliente: el navegador solo pinta lo que recibe.
-
-### Eje 3 · Organización interna del código: capas lógicas y MVC
-
-#### Capas lógicas
-
-| Capa | Responsabilidad | En Spring |
-|---|---|---|
-| **Presentación** | Recibir la petición y mostrar el resultado | `@Controller` + plantilla Thymeleaf |
-| **Negocio** (aplicación) | Reglas del negocio: validar stock, calcular descuentos… | `@Service` |
-| **Datos** (persistencia) | Guardar y recuperar información | `@Repository` |
-
-Cada capa solo habla con la **adyacente**, a través de interfaces bien definidas. Así se puede cambiar una capa sin afectar a las demás.
-
-#### MVC: un patrón de diseño, no una arquitectura
-
-**MVC (Modelo-Vista-Controlador)** es un **patrón de diseño** para organizar la parte web de una aplicación, es decir, el recorrido petición → respuesta.
-
-| Pieza | Qué hace | En Jakarta EE | En Spring |
-|---|---|---|---|
-| **Controlador** | Recibe la petición, pide los datos y decide qué vista mostrar | Servlet | `@Controller` |
-| **Modelo** | Los datos que se van a mostrar | Atributos del request (`setAttribute`) | Objeto `Model` |
-| **Vista** | Presenta los datos, sin lógica de negocio | JSP | Plantilla Thymeleaf |
-
-Spring Web MVC toma su nombre de este patrón.
-
-#### ¿Capas y MVC son lo mismo? No
-
-| | Capas lógicas | MVC |
-|---|---|---|
-| **Qué es** | Organización de **toda** la aplicación | Patrón de la **parte web** (petición → respuesta) |
-| **Alcance** | Presentación + negocio + datos | Vive dentro de la capa de presentación |
-| **Lógica de negocio** | En su propia capa (servicios) | Ni en el controlador ni en la vista: el controlador **delega** |
-| **¿El modelo es la base de datos?** | — | No: es la información que el controlador pasa a la vista |
-
-Se confunden porque muchos diagramas ponen Vista = Presentación, Controlador = Aplicación y Modelo = Datos. Se parecen, pero no son equivalentes.
-
-#### La palabra «modelo» significa tres cosas distintas
-
-Aquí está casi todo el lío: llamamos «modelo» a tres cosas que no son lo mismo.
-
-| Lo que llamamos «modelo» | Qué es en realidad | Dónde vive | En la práctica de los Simpson |
-|---|---|---|---|
-| **Entidades o clases de dominio** | Las clases Java que representan los datos del negocio | **No son una capa**: viajan por todas las capas | `Personaje` (paquete `modelo`, también llamado `entidad` o `dominio`) |
-| **Capa de datos** | El código que **guarda y recupera** esas entidades (BD, fichero, JSON…) | Capa de datos | `PersonajeRepositorio` |
-| **Modelo de MVC** | Los datos que el controlador **pasa a la vista** en una petición concreta | Capa de presentación | `request.setAttribute("personajes", lista)` |
-
-Dicho de otra forma: el **repositorio** sabe *dónde* están los datos; la **entidad** es *qué forma* tienen; el **modelo de MVC** es *qué parte* de esos datos se enseña en esta pantalla.
-
-#### Cada capa con un ejemplo: la práctica de los Simpson
-
-| Capa | Pregunta que responde | Clase | Qué hace |
-|---|---|---|---|
-| **Presentación** (aquí se aplica MVC) | ¿Qué me piden y qué muestro? | `PersonajesServlet` (Controlador) + `personajes.jsp` (Vista) | Lee los parámetros del formulario, llama al servicio, guarda el resultado en el request y hace `forward` a la JSP |
-| **Negocio** | ¿Qué reglas aplico? | `PersonajeServicio` | Filtra por lugar y edad, ordena y limita el resultado (los streams) |
-| **Datos** | ¿De dónde saco los datos y cómo los guardo? | `PersonajeRepositorio` | Devuelve todos los personajes (simula una BD o un JSON) |
-| *(Entidad, en todas)* | ¿Qué forma tiene un dato? | `Personaje` (record) | Solo datos: nombre, edad, lugar… |
-
-El recorrido de una petición:
-
-```
-Navegador ──GET /personajes?lugar=...──▶ PersonajesServlet      (presentación · Controlador)
-                                            │ llama a
-                                            ▼
-                                         PersonajeServicio      (negocio: filtra, ordena)
-                                            │ llama a
-                                            ▼
-                                         PersonajeRepositorio   (datos: obtiene todos)
-                                            │ devuelve List<Personaje>   ← entidades
-                                            ▼
-                     servlet: request.setAttribute("personajes", lista)  ← Modelo de MVC
-                                            │ forward
-                                            ▼
-Navegador ◀──────────── HTML ────────────  personajes.jsp       (presentación · Vista)
-```
-
-**Regla para no liarse:** el controlador no filtra ni calcula (eso es negocio) y el servicio no sabe nada de `request`, JSP ni HTML (eso es presentación). Si mañana los personajes vienen de MySQL, solo cambia el repositorio.
-
-En Spring será exactamente igual: `@Controller` + Thymeleaf (presentación), `@Service` (negocio), `@Repository` (datos), y las entidades serán clases con `@Entity`.
-
-**En aplicaciones muy pequeñas**, como la práctica del init, no hay capas de negocio ni de datos separadas: el servlet hace de controlador y los datos son variables. Ahí aplicamos **MVC**, pero apenas hay capas.
-
-### Eje 4 · Integración entre sistemas
-
-| | Qué es | Qué resuelve |
-|---|---|---|
-| **SOA** (*Service-Oriented Architecture*) | La funcionalidad de negocio se expone como **servicios reutilizables** con interfaces bien definidas, normalmente coordinados por un bus (ESB) | Reutilizar servicios e integrar muchos sistemas distintos de una organización |
-| **EDA** (*Event-Driven Architecture*) | Los sistemas se comunican **emitiendo y escuchando eventos**, sin llamarse directamente | Desacoplar sistemas; muy útil en sistemas distribuidos con comunicación asíncrona |
-| **REST** | **Estilo de comunicación** sobre HTTP (recursos, verbos, sin estado) | Cómo hablan dos sistemas, no cómo se organizan |
-
-- **SOA no es «tener una API REST».** SOA puede implementarse con SOAP (lo clásico) o con REST (lo moderno). Y un back-end monolítico que expone una API REST para su propio front-end es cliente-servidor con REST, no SOA.
-- **Microservicios vs. SOA:** los microservicios se ven como una evolución de SOA. La diferencia no es que SOA tenga «una BD central», sino quién es dueño de los datos y quién lleva la inteligencia de la comunicación:
-
-    | | SOA (clásico) | Microservicios |
-    |---|---|---|
-    | **Objetivo** | Integrar y reutilizar los sistemas de **toda una organización** (ERP, CRM, aplicaciones antiguas…) | Dividir **una aplicación** en piezas pequeñas e independientes |
-    | **Tamaño del servicio** | Grande: una función de negocio amplia | Pequeño: una tarea concreta |
-    | **Comunicación** | Muchas veces a través de un **bus (ESB)** que enruta, transforma y orquesta los mensajes. Es habitual, pero no obligatorio | Directa, con REST o mensajería ligera: la lógica está en los servicios, no en el canal |
-    | **Datos** | Cada sistema tiene sus BD y **compartir una BD entre servicios está permitido** y es frecuente | **Cada servicio es dueño de su BD** y ningún otro accede a ella directamente |
-    | **Despliegue** | Coordinado entre sistemas | Cada servicio se despliega por separado |
-
-    **Ejemplo:** en SOA, un banco publica «consultar cliente» como servicio para la web, la app, los cajeros y el sistema de préstamos, y por debajo puede tirar del mainframe de siempre. En microservicios, Netflix divide su plataforma en catálogo, recomendaciones, pagos…, cada uno con su propia BD y desplegado por separado.
-- **Programación orientada a eventos ≠ EDA:** `@EventListener` dentro de una misma aplicación Spring es organización interna del código (patrón Observer). Solo es EDA cuando **varios sistemas separados** se comunican mediante un broker (Kafka, RabbitMQ…).
-
-### Ejemplo aplicado: la práctica del init
-
-| Eje | Pregunta | Respuesta | Por qué |
-|---|---|---|---|
-| 1. Comunicación | ¿Quién habla con quién? | **Cliente-servidor** | El navegador envía la petición HTTP; Tomcat la procesa y responde |
-| 2a. Despliegue | ¿Cuántas unidades? | **Monolítica** | Servlet + JSP + estado en un único WAR, en un único Tomcat |
-| 2b. Despliegue | ¿Cuántos niveles físicos? | **2 niveles** | Navegador + Tomcat; los datos son variables en memoria de la misma JVM |
-| 3. Organización interna | ¿Cómo se organiza el código? | **MVC** | `InitDemoServlet` = Controlador, `resultado.jsp` = Vista, variables de estado = Modelo |
-| 4. Integración | ¿Se relaciona con otros sistemas? | **No aplica** | Solo hay un sistema |
-
-**¿Y si cambiamos la práctica?**
-
-- Guardamos los datos en un MySQL en otra máquina → sigue siendo **monolítica**, pero pasa a **3 niveles**.
-- Separamos el código en Servlet → Servicio → Repositorio → sigue siendo monolítica, ahora **con capas lógicas** además de MVC.
-- Dividimos la aplicación en un servicio de usuarios y otro de pedidos, cada uno con su WAR y su BD → **microservicios**.
-
-### Tabla resumen
-
-| Concepto | Eje | Se puede combinar con… |
-|---|---|---|
-| Cliente-servidor | 1. Comunicación | Monolítica, microservicios, cualquier nº de niveles, MVC, REST |
-| Monolítica | 2a. Despliegue | Cliente-servidor, 2 o 3 niveles, capas, MVC |
-| Microservicios | 2a. Despliegue | SOA o EDA para integrarlos; REST o mensajería para comunicarlos |
-| Serverless | 2a. Despliegue | Microservicios y EDA |
-| 2 / 3 / N niveles | 2b. Despliegue | Monolítica o microservicios; capas y MVC dentro de cada nivel |
-| Capas lógicas | 3. Organización interna | Cualquier despliegue; MVC dentro de la capa de presentación |
-| MVC | 3. Organización interna (patrón de diseño) | Cualquier despliegue; capas lógicas |
-| SOA | 4. Integración | REST o SOAP; a veces EDA |
-| EDA | 4. Integración | Microservicios, serverless, SOA |
-| REST | Ninguno: estilo de comunicación | Cualquier arquitectura |
-
----
-
-## 4. El protocolo HTTP
+Es el idioma en el que hablan cliente y servidor. Todo lo que viene después (servidores, APIs, arquitecturas) se apoya en él.
 
 ### Qué es HTTP y qué añade HTTPS
 
@@ -362,17 +133,44 @@ Lo que ocurre paso a paso al escribir una URL (DNS, TCP, HTTP, renderizado) est�
 
 ---
 
-## 5. Servicios web y APIs
+## 3. Servidores web y servidores de aplicaciones
+
+| | Servidor web | Servidor de aplicaciones |
+|---|---|---|
+| **Qué hace** | Recibe peticiones HTTP/HTTPS y devuelve recursos **estáticos** (HTML, CSS, imágenes, JavaScript) | Proporciona un **entorno de ejecución** para aplicaciones: ejecuta código del servidor, procesa peticiones dinámicas (validar un login, generar un informe) y gestiona la lógica de negocio y el acceso a datos |
+| **Ejemplos** | Apache HTTP Server, Nginx, Microsoft IIS | Apache Tomcat (contenedor de servlets), WildFly, GlassFish, Payara |
+| **¿Puede ejecutar una aplicación Jakarta EE?** | No: no implementa la API de Servlet | Sí, si implementa las especificaciones que usa la aplicación |
+
+### Cómo se integran
+
+Es habitual poner un **servidor web delante del servidor de aplicaciones** como **proxy inverso**: Nginx o Apache reciben todas las peticiones, sirven directamente los recursos estáticos y reenvían las dinámicas a Tomcat.
+
+### Los servidores en el ecosistema Jakarta EE
+
+- **Tomcat** es un **contenedor web**: implementa solo algunas especificaciones (Servlet, JSP, Expression Language y WebSocket). **JSTL no viene incluido**: hay que añadirlo como dependencia.
+- **WildFly, GlassFish, Payara, Open Liberty…** implementan el perfil completo de Jakarta EE (CDI, JPA, EJB…). GlassFish es la implementación de referencia.
+- **Spring Boot** incluye un Tomcat **embebido**: la aplicación arranca con su propio servidor, sin instalarlo aparte.
+- **Node.js** es un entorno de ejecución de JavaScript en el servidor; sirve para comparar cómo distintos lenguajes resuelven el mismo problema.
+
+Quién define la API y quién la implementa (Eclipse Foundation, servidor, `scope provided`…) está explicado en [Aclaración Jakarta EE](aclaracion-jakarta-ee.md).
+
+---
+
+## 4. Servicios web y APIs
+
+Hasta ahora el servidor devolvía **páginas** para personas. También puede devolver **datos** para otras aplicaciones.
 
 ### Qué es un servicio web (API)
 
-Un conjunto de reglas y protocolos que permite a **otra aplicación** comunicarse de forma remota para usar un servicio. Cada funcionalidad tiene un **endpoint** (una URL) y un mismo servicio puede tener varios clientes: integración, escalabilidad y reutilización.
+Un conjunto de reglas y protocolos que permite a **otra aplicación** comunicarse de forma remota para usar un servicio. Cada funcionalidad tiene un **endpoint** (una URL) y un mismo servicio puede tener varios clientes.
 
 | Página web dinámica | Servicio web (API) |
 |---|---|
 | Genera **HTML** para que lo vea una **persona** en el navegador | Expone **datos y funcionalidades** para que los consuman **otras aplicaciones**, normalmente en **JSON** |
 
-Una SPA puede consumir varios servicios web para construir su interfaz.
+### Tendencia: el back-end como servicio universal
+
+El servidor expone su funcionalidad a través de una **API** que cualquier cliente puede consumir: una SPA, una app móvil, una aplicación de escritorio u otro sistema. El back-end ya no está ligado a una interfaz concreta: devuelve datos en formatos estándar (**JSON**, XML) y cada cliente los representa a su manera.
 
 ### Tipos de API más usados
 
@@ -382,38 +180,163 @@ Una SPA puede consumir varios servicios web para construir su interfaz.
 | **GraphQL** | Lenguaje de consulta: el cliente pide exactamente los datos que necesita, ni más ni menos |
 | **WebSocket** | Conexión persistente y bidireccional para tiempo real (chats, notificaciones) |
 
+Una API **no es una arquitectura**: es la forma en que una aplicación se deja usar desde fuera. Puede tenerla una aplicación monolítica, cada microservicio o un servicio SOA (lo verás en el apartado siguiente).
+
 ---
 
-## 6. Buenas prácticas de diseño: SOLID y patrones
+## 5. Arquitecturas de software
 
-> **No entra en la prueba 1 (13 de octubre).** Se trabajará aplicándolo con Spring y se evaluará en la prueba práctica (RA5.g: «Se han aplicado los principios y patrones de diseño de la programación orientada a objetos»).
+### La idea clave: 4 ejes
 
-### Principios SOLID
+El error típico es tratar «monolítica», «cliente-servidor», «3 capas», «MVC», «microservicios», «SOA»… como si fueran alternativas de una misma pregunta.
 
-| Principio | Idea |
-|---|---|
-| **S** · Responsabilidad única | Una clase debe tener una, y solo una, razón para cambiar |
-| **O** · Abierto/cerrado | Abierta a extensión, cerrada a modificación |
-| **L** · Sustitución de Liskov | Un objeto de una subclase debe poder sustituir a uno de la superclase sin romper el programa |
-| **I** · Segregación de interfaces | Ningún cliente debe depender de métodos que no usa |
-| **D** · Inversión de dependencias | Los módulos de alto nivel no dependen de los de bajo nivel: ambos dependen de abstracciones. Es la base de la inyección de dependencias de Spring |
+En realidad responden a **preguntas distintas**, y una misma aplicación tiene una respuesta para cada una **al mismo tiempo**.
 
-### Patrones de diseño
-
-Soluciones probadas y reutilizables para problemas que se repiten.
-
-| Tipo | Ejemplos | Para qué |
+| Eje | Pregunta | Opciones típicas |
 |---|---|---|
-| **De creación** | Singleton, Factory Method, Abstract Factory, Builder | Crear objetos de forma flexible |
-| **Estructurales** | Adapter, Decorator, Composite, Proxy | Componer clases y objetos |
-| **De comportamiento** | Observer, Strategy, Template Method, Command | Cómo interactúan los objetos |
-| **De presentación web** | MVC | Organizar el recorrido petición → controlador → modelo → vista |
+| **1. Comunicación** | ¿Quién pide y quién responde? | **Cliente-servidor** (prácticamente toda aplicación web) |
+| **2. Despliegue** | ¿En cuántas unidades se despliega la aplicación? ¿En cuántos niveles físicos se reparte? | Unidades: **monolítica** · **microservicios** · **serverless**<br>Niveles: **2** · **3** · **N niveles** |
+| **3. Organización interna del código** | ¿Cómo se reparten las responsabilidades dentro del código? | **Capas lógicas** (presentación / negocio / acceso a datos) · patrón **MVC** |
+| **4. Integración entre sistemas** | ¿Cómo se relacionan varios sistemas distintos? | **SOA** · **EDA** |
 
-Recuerda: las **arquitecturas** (monolítica, microservicios, SOA…) responden a cómo se despliega o se integra el sistema; **MVC** es un patrón que organiza el código (eje 3 del apartado 3).
+**REST no es ningún eje:** es un estilo de comunicación sobre HTTP que puede usar cualquiera de las arquitecturas.
+
+**No hay una arquitectura «perfecta»:** la elección depende de los requisitos de cada proyecto.
+
+### Vocabulario: capa ≠ nivel
+
+| Término | Qué es | Pregunta a la que responde |
+|---|---|---|
+| **Capa** (*layer*) | Separación **lógica** del código por responsabilidades | ¿Qué parte del código hace cada cosa? |
+| **Nivel** (*tier*) | Separación **física**: procesos o máquinas distintos | ¿Dónde se ejecuta cada parte? |
+
+Varias capas lógicas pueden ejecutarse en un mismo nivel físico. Una aplicación con 3 capas lógicas puede estar desplegada en 1, 2 o 3 niveles. En este módulo, «capa» siempre es lógica y «nivel» siempre es físico: no hablamos de «capas físicas».
+
+### Vocabulario: la palabra «servicio» significa cuatro cosas
+
+| Cuando decimos… | Nos referimos a… | Eje |
+|---|---|---|
+| **Servicio web / API** | Lo que un servidor expone para que lo usen otras aplicaciones (endpoints) | No es un eje: es cómo se usa una aplicación desde fuera (apartado 4) |
+| **Microservicio** | Una **unidad de despliegue** pequeña e independiente, con su propia BD. Normalmente expone una API | 2. Despliegue |
+| **Servicio SOA** | Una funcionalidad de negocio que **varios sistemas** de una organización reutilizan | 4. Integración |
+| **Servicio (`@Service`)** | Una **clase** de la capa de negocio dentro del código | 3. Organización interna |
+
+### Eje 1 · Comunicación: cliente-servidor
+
+Un **cliente** (navegador, app) envía una **petición** (GET, POST…) y un **servidor** la procesa y devuelve una **respuesta** (HTML, JSON, un código de estado…). La interfaz está en el cliente; la funcionalidad, en el servidor. Es la base de todas las aplicaciones web.
+
+**Ventajas:**
+
+- **Control centralizado:** el servidor gestiona accesos, recursos e integridad de los datos.
+- **Escalabilidad:** cliente y servidor crecen por separado.
+- **Portabilidad:** el navegador independiza la aplicación del sistema operativo.
+- **Mantenimiento sencillo:** se actualiza el servidor sin tocar los clientes.
+- **Seguridad:** los datos sensibles permanecen en el servidor.
+
+**Cliente-servidor no dice nada de cómo es el servidor por dentro.** Por eso **no es incompatible con monolítica**: cliente-servidor dice quién habla con quién; monolítica dice cuántas unidades se despliegan en el servidor. La inmensa mayoría de aplicaciones web sencillas son las dos cosas a la vez.
+
+### Eje 2 · Despliegue
+
+#### 2a. ¿En cuántas unidades se despliega la aplicación?
+
+| Arquitectura | Qué es | Unidades | Cuándo elegirla |
+|---|---|---|---|
+| **Monolítica** | Interfaz, lógica de negocio y acceso a datos en un solo bloque que se ejecuta en un mismo proceso | 1 (un WAR, un proceso) | Proyectos pequeños o equipos reducidos. Fácil de desarrollar y desplegar; difícil de mantener al crecer, y escalar implica escalar todo el bloque |
+| **Microservicios** | La aplicación se divide en servicios pequeños y autónomos, cada uno centrado en una tarea, con su propia BD y desplegado por separado | Muchas | Sistemas grandes con equipos separados. Ejemplo: **Netflix**, con buena parte de sus servicios en Spring Boot |
+| **Serverless** | El proveedor cloud gestiona toda la infraestructura; el equipo solo escribe funciones | Ninguna gestionada por ti | Funciones puntuales y picos de demanda variables. Escalado automático y pago por uso |
+
+#### 2b. ¿En cuántos niveles físicos se reparte?
+
+| Niveles | Ejemplo |
+|---|---|
+| **2 niveles** | Navegador → Tomcat, con los datos en memoria o en un fichero del propio servidor |
+| **3 niveles** | Navegador → Tomcat → MySQL en otra máquina |
+| **N niveles** | Navegador → balanceador → varios Tomcat → caché → BD |
+
+**Monolítica y 3 niveles son compatibles:** un único WAR en Tomcat que usa un MySQL en otra máquina es monolítico y está desplegado en 3 niveles.
+
+### Eje 3 · Organización interna del código: capas lógicas y MVC
+
+#### Capas lógicas
+
+| Capa | Responsabilidad | En Spring |
+|---|---|---|
+| **Presentación** | Recibir la petición y mostrar el resultado | `@Controller` + plantilla Thymeleaf |
+| **Lógica de negocio** | Reglas del negocio: validar stock, calcular descuentos… | `@Service` |
+| **Acceso a datos** (persistencia) | Guardar y recuperar información | `@Repository` |
+
+Cada capa solo habla con la **adyacente**, a través de interfaces bien definidas. Así se puede cambiar una capa sin afectar a las demás.
+
+La **base de datos** (PostgreSQL, MongoDB…) **no es una capa del código**: es el sistema donde la capa de acceso a datos guarda la información. Si está en otra máquina, es otro **nivel físico** (eje 2b).
+
+#### MVC: un patrón de diseño, no una arquitectura
+
+**MVC (Modelo-Vista-Controlador)** es un **patrón de diseño** para organizar la parte web de una aplicación, es decir, el recorrido petición → respuesta. Vive dentro de la **capa de presentación**.
+
+| Pieza | Qué hace | En Jakarta EE | En Spring |
+|---|---|---|---|
+| **Controlador** | Recibe la petición, pide los datos y decide qué vista mostrar | Servlet | `@Controller` |
+| **Modelo** | Los datos que se van a mostrar | Atributos del request (`setAttribute`) | Objeto `Model` |
+| **Vista** | Presenta los datos, sin lógica de negocio | JSP | Plantilla Thymeleaf |
+
+Spring Web MVC toma su nombre de este patrón.
+
+#### Ejemplo: la práctica de los Simpson
+
+El recorrido de una petición:
+
+```
+Navegador ──GET /personajes?lugar=...──▶ PersonajesServlet      (presentación · Controlador)
+                                            │ llama a
+                                            ▼
+                                         PersonajeServicio      (negocio: filtra, ordena)
+                                            │ llama a
+                                            ▼
+                                         PersonajeRepositorio   (acceso a datos: obtiene todos)
+                                            │ devuelve List<Personaje>   ← entidades
+                                            ▼
+                     servlet: request.setAttribute("personajes", lista)  ← Modelo de MVC
+                                            │ forward
+                                            ▼
+Navegador ◀──────────── HTML ────────────  personajes.jsp       (presentación · Vista)
+```
+
+**Ojo con el nombre:** `Personaje` está en el paquete `modelo`, pero es una **entidad** (los datos del dominio), no el Modelo de MVC. En proyectos reales verás `model`, `entity` o `domain` para lo mismo.
+
+**Regla para no liarse:** el controlador no filtra ni calcula (eso es negocio) y el servicio no sabe nada de `request`, JSP ni HTML (eso es presentación). Si mañana los personajes vienen de MySQL, solo cambia el repositorio.
+
+En Spring será exactamente igual: `@Controller` + Thymeleaf (presentación), `@Service` (negocio), `@Repository` (acceso a datos), y las entidades serán clases con `@Entity`.
+
+### Eje 4 · Integración entre sistemas
+
+| | Qué es | Qué resuelve |
+|---|---|---|
+| **SOA** (*Service-Oriented Architecture*) | La funcionalidad de negocio se expone como **servicios reutilizables** con interfaces bien definidas, normalmente coordinados por un bus (ESB) | Reutilizar servicios e integrar muchos sistemas distintos de una organización |
+| **EDA** (*Event-Driven Architecture*) | Los sistemas se comunican **emitiendo y escuchando eventos**, sin llamarse directamente | Desacoplar sistemas; muy útil en sistemas distribuidos con comunicación asíncrona |
+
+**SOA no es «tener una API REST».** SOA puede implementarse con SOAP (lo clásico) o con REST (lo moderno). Y un back-end monolítico que expone una API REST para su propio front-end es cliente-servidor con REST, no SOA.
+
+**SOA vs. microservicios:** SOA integra los sistemas de **toda una organización**; los microservicios dividen **una aplicación** en piezas pequeñas, cada una dueña de su BD.
+
+### Ejemplo aplicado: la práctica del init
+
+| Eje | Pregunta | Respuesta | Por qué |
+|---|---|---|---|
+| 1. Comunicación | ¿Quién habla con quién? | **Cliente-servidor** | El navegador envía la petición HTTP; Tomcat la procesa y responde |
+| 2a. Despliegue | ¿Cuántas unidades? | **Monolítica** | Servlet + JSP + estado en un único WAR, en un único Tomcat |
+| 2b. Despliegue | ¿Cuántos niveles físicos? | **2 niveles** | Navegador + Tomcat; los datos son variables en memoria de la misma JVM |
+| 3. Organización interna | ¿Cómo se organiza el código? | **MVC** | `InitDemoServlet` = Controlador, `resultado.jsp` = Vista, variables de estado = Modelo |
+| 4. Integración | ¿Se relaciona con otros sistemas? | **No aplica** | Solo hay un sistema |
+
+**¿Y si cambiamos la práctica?**
+
+- Guardamos los datos en un MySQL en otra máquina → sigue siendo **monolítica**, pero pasa a **3 niveles**.
+- Separamos el código en Servlet → Servicio → Repositorio → sigue siendo monolítica, ahora **con capas lógicas** además de MVC.
+- Dividimos la aplicación en un servicio de usuarios y otro de pedidos, cada uno con su WAR y su BD → **microservicios**.
 
 ---
 
-## 7. Este módulo en la práctica
+## 6. Este módulo en la práctica
 
 | | Qué usaremos |
 |---|---|
@@ -427,7 +350,7 @@ Recuerda: las **arquitecturas** (monolítica, microservicios, SOA…) responden 
 
 ---
 
-## 8. Errores típicos a evitar
+## 7. Errores típicos a evitar
 
 1. Decir «es cliente-servidor, así que no puede ser monolítica» → falso: responden a preguntas distintas (quién habla con quién / cuántas unidades se despliegan).
 2. Decir «no puede ser monolítica porque tiene capas» → falso: las capas son organización del código, no despliegue.
@@ -435,6 +358,7 @@ Recuerda: las **arquitecturas** (monolítica, microservicios, SOA…) responden 
 4. Confundir 3 capas lógicas con 3 niveles físicos → las capas son código; los niveles, procesos o máquinas.
 5. Pensar que monolítica implica 2 niveles → un único WAR con la BD en otra máquina es monolítico y de 3 niveles.
 6. Decir «es SOA porque tiene una API REST» → falso: REST es el estilo de comunicación, no la arquitectura de integración.
-7. Asumir que la presentación siempre vive en el cliente → depende de si el HTML lo genera el servidor (JSP, Thymeleaf) o el navegador (SPA + API REST).
-8. Pensar que un servidor web como Nginx puede ejecutar servlets → hace falta un contenedor o servidor de aplicaciones que implemente la API.
-9. Confiar solo en la validación del cliente → la del servidor es obligatoria.
+7. Confundir «servicio web», «microservicio», «servicio SOA» y la clase `@Service` → son cuatro cosas distintas.
+8. Asumir que la presentación siempre vive en el cliente → depende de si el HTML lo genera el servidor (JSP, Thymeleaf) o el navegador (SPA + API REST).
+9. Pensar que un servidor web como Nginx puede ejecutar servlets → hace falta un contenedor o servidor de aplicaciones que implemente la API.
+10. Confiar solo en la validación del cliente → la del servidor es obligatoria.
