@@ -3,10 +3,13 @@ package es.daw.jakartalogin;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import es.daw.jakartalogin.exception.NoEcontradoException;
+import es.daw.jakartalogin.util.FileUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -26,17 +29,20 @@ public class AltaServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
+            // cargamos la lista de tecnologías leyendo el fichero de texto una única vez!!!!
+            tecnologias = FileUtil.leerFichero(getServletContext(),"/WEB-INF/datos/tecnologias.txt");
 
             LOGGER.info("Lista de tecnologias: " + tecnologias);
 
-        } catch (IOException e) {
+        } catch (NoEcontradoException | IOException e) {
             // Si no existe el fichero, quiero devolver un error.html!!!! (error.jsp con el mensaje dinámico)
 //            request.setAttribute("mensajeError", e.getMessage());
 //            request.getRequestDispatcher("/error.jsp").forward(request,response);
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
-
         }
+//        } catch (IOException e) {
+//            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+//        }
     }
 
     @Override
@@ -46,11 +52,13 @@ public class AltaServlet extends HttpServlet {
         // Leer el fichero de texto tecnologias.txt y cargar en un ArrayList
         // List<String> tecnologias = new ArrayList<>();
 
-        //
+        // Prueba para verificar que si leo un parámetro que no se envía vía get, viene a null
+        // y si uso un método directamente en un objeto null me da un NullPointerException
         String paramChungo = request.getParameter("chungo");
         paramChungo = paramChungo == null ? "" : paramChungo.strip();
 
 
+        // Comentado porque hemos pasado la lógica al método init!!!
 //        try {
 //            tecnologias = leerFichero("/WEB-INF/datos/tecnologias.txt");
 //
@@ -80,7 +88,8 @@ public class AltaServlet extends HttpServlet {
         LOGGER.info("El nombre: " + nombre);
         String email = request.getParameter("email");
         String tecnologia = request.getParameter("tecnologia");
-        String nivel = request.getParameter("nivel");
+        //String nivel = request.getParameter("nivel");
+        String[] niveles = request.getParameterValues("nivel"); // multiselección
 
         // PENDIENTE!!! hacer todas validaciones...
         //-------------------------------------
@@ -89,6 +98,9 @@ public class AltaServlet extends HttpServlet {
             request.setAttribute("mensajeError", "Majete!!! El nombre es obligatorio");
             //request.setAttribute("tecnologias", leerFichero("/WEB-INF/datos/tecnologias.txt"));
             request.setAttribute("tecnologias", tecnologias);
+            //request.setAttribute("email", email); // no es necesario mandarlo como atributo porque puedo usar param.email
+
+            request.setAttribute("nivelesLista", List.of(niveles)); // otra opción
             request.getRequestDispatcher("/formulario.jsp").forward(request,response);
             return;
         }
@@ -106,7 +118,7 @@ public class AltaServlet extends HttpServlet {
         request.setAttribute("tecnologia", tecnologia);
         request.setAttribute("nombre", nombre);
         request.setAttribute("email", email);
-        request.setAttribute("nivel", nivel);
+        request.setAttribute("nivel", Arrays.toString(niveles));
 
         request.getRequestDispatcher("/confirmacion.jsp").forward(request,response);
 
@@ -114,55 +126,6 @@ public class AltaServlet extends HttpServlet {
 
     }
 
-    /**
-     * Lee un fichero de texto pasado como argumento.
-     * El fichero tiene diferentes líneas
-     * @param rutaFichero ruta absoluta del fichero. Condición, debe ser accesible y estar en el .war
-     * @return ArrayList con el contenido, línea a línea
-     * @throws IOException Si no se encuentra el fichero...
-     */
-    private List<String> leerFichero(String rutaFichero) throws IOException{
-        List<String> lista = new ArrayList<>();
-
-        // kk!!! no pongo a fuego la ruta del fichero... quiero reutilizar!!!
-        //InputStream is = getServletContext().getResourceAsStream("/WEB-INF/datos/tecnologia.txt");
-
-        // getResourceAsStream abrir un flujo de bytes (inputStream)
-        InputStream is = getServletContext().getResourceAsStream(rutaFichero);
-
-        if (is == null) {
-            // PENDIENTE!!! trabajar con excepciones propias. Crea una excepción checked llamada RutaNoEncontradaException!!!!
-            throw new IOException("No se encuentra el fichero " + rutaFichero);
-        }
-
-        // try con recursos...
-        // BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        // InputStream: flujo de bytes
-        // InputStreamReader: convierte esos bytes en caracteres, según el charset
-        // BufferedReader: añade un buffer para leer línea a lína
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))){
-           String linea;
-           while( (linea = br.readLine()) != null){
-               LOGGER.info(linea);
-               if (!linea.isBlank())
-                   lista.add(linea.trim());
-           }
-        }
-        // kk!!!! no finally!!!! siempre que podamos try..catch con recursos!!!
-//        catch (IOException e){
-//            LOGGER.info(e.getMessage());
-//        }
-//        finally{
-//            // se cerraban recursos.... viejuno!!!!!
-//            try {
-//                br.close();
-//            } catch (IOException e) {
-//                LOGGER.info(e.getMessage());
-//            }
-//        }
-
-        return lista;
-    }
 
 
 

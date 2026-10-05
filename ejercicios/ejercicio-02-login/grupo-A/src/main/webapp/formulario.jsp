@@ -44,7 +44,8 @@
         <input type="text" id="nombre" name="nombre">
 
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required value="${email}">
+<%--        <input type="email" id="email" name="email" required value="${email}">--%><!-- leer email como atributo -->
+        <input type="email" id="email" name="email" required value="${param.email}">
 
         <label for="tecnologia">Tecnología con la que más te gustaría trabajar</label>
         <select id="tecnologia" name="tecnologia">
@@ -84,10 +85,19 @@
 <%--                    <option value="Avanzado" ${'Avanzado' == nivel ? 'selected':''}>Avanzado</option>--%>
 <%--            <%}%>--%>
 
-                    <c:set var="nivelesSeleccionados" value="${fn:join(niveles, ',')}"/>
-                    <option value="Principiante" ${ fn:contains(nivelesSeleccionados,'Principiante') ? 'selected':''} >Principiante</option>
-                    <option value="Intermedio" ${ fn:contains(nivelesSeleccionados,'Intermedio')? 'selected':''}>Intermedio</option>
-                    <option value="Avanzado" ${ fn:contains(nivelesSeleccionados,'Avanzado')? 'selected':''}>Avanzado</option>
+<%--                    <c:set var="nivelesSeleccionados" value="${fn:join(niveles, ',')}"/>--%>
+<%--                    <option value="Principiante" ${ fn:contains(nivelesSeleccionados,'Principiante') ? 'selected':''} >Principiante</option>--%>
+<%--                    <option value="Intermedio" ${ fn:contains(nivelesSeleccionados,'Intermedio')? 'selected':''}>Intermedio</option>--%>
+<%--                    <option value="Avanzado" ${ fn:contains(nivelesSeleccionados,'Avanzado')? 'selected':''}>Avanzado</option>--%>
+
+
+<%--                <option value="Principiante" ${paramValues.nivel.stream().toList().contains('Principiante')?'selected':''}>Principiante</option>--%>
+<%--                <option value="Intermedio" ${paramValues.nivel.stream().toList().contains('Intermedio')?'selected':''}>Intermedio</option>--%>
+<%--                <option value="Avanzado" ${paramValues.nivel.stream().toList().contains('Avanzado')?'selected':''}>Avanzado</option>--%>
+
+            <option value="Principiante" ${niveles.contains('Principiante')?'selected':''}>Principiante</option>
+            <option value="Intermedio" ${niveles.contains('Intermedio')?'selected':''}>Intermedio</option>
+            <option value="Avanzado" ${niveles.contains('Avanzado')?'selected':''}>Avanzado</option>
 
         </select>
 

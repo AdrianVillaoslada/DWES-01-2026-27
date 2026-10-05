@@ -38,7 +38,9 @@
         <input type="text" id="nombre" name="nombre">
 
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+<%--      <input type="email" id="email" name="email" value="${email}" required>--%>
+
+        <input type="email" id="email" name="email" value="${param.email}" required>
 
       <label for="tecnologia">Tecnología con la que más te gustaría trabajar</label>
       <!-- PENDIENTE!!! el select multiple y recoger múltiples valores de la lista -->
@@ -54,18 +56,33 @@
             <% } %>--%>
 
           <c:forEach var="t" items="${tecnologias}">
-              <option value="${t}">${t}</option>
+              <option value="${t}" ${t == param.tecnologia ? 'selected':''}>${t}</option>
           </c:forEach>
 
 
       </select>
 
       <label for="nivel">Tu nivel actual</label>
-      <select id="nivel" name="nivel">
-        <option value="Principiante">Principiante</option>
-        <option value="Intermedio">Intermedio</option>
-        <option value="Avanzado">Avanzado</option>
-      </select>
+        <!-- MONOSELECCIÓN -->
+<%--      <select id="nivel" name="nivel" >--%>
+<%--        <option value="Principiante" ${param.nivel.equals('Principiante')?'selected':''}>Principiante</option>--%>
+<%--        <option value="Intermedio" ${param.nivel.equals('Intermedio')?'selected':''}>Intermedio</option>--%>
+<%--        <option value="Avanzado" ${param.nivel.equals('Avanzado')?'selected':''}>Avanzado</option>--%>
+<%--      </select>--%>
+
+        <!-- NIVEL ES UN ARRAY CUANDO ES MULTISELECCIÓN -->
+
+<%--        <select id="nivel" name="nivel" multiple>--%>
+<%--            <option value="Principiante" ${paramValues.nivel.stream().toList().contains('Principiante')?'selected':''}>Principiante</option>--%>
+<%--            <option value="Intermedio" ${paramValues.nivel.stream().toList().contains('Intermedio')?'selected':''}>Intermedio</option>--%>
+<%--            <option value="Avanzado" ${paramValues.nivel.stream().toList().contains('Avanzado')?'selected':''}>Avanzado</option>--%>
+<%--        </select>--%>
+
+        <select id="nivel" name="nivel" multiple>
+            <option value="Principiante" ${nivelesLista.contains('Principiante')?'selected':''}>Principiante</option>
+            <option value="Intermedio" ${nivelesLista.contains('Intermedio')?'selected':''}>Intermedio</option>
+            <option value="Avanzado" ${nivelesLista.contains('Avanzado')?'selected':''}>Avanzado</option>
+        </select>
 
       <button type="submit">Enviar</button>
     </form>

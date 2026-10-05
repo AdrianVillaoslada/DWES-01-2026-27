@@ -75,7 +75,7 @@ public class AltaServlet extends HttpServlet {
         String email = request.getParameter("email");
         String tecnologia = request.getParameter("tecnologia");
         //String nivel = request.getParameter("nivel");
-        String[] niveles = request.getParameterValues("nivel");
+        String[] niveles = request.getParameterValues("nivel"); //multiselección
 
         LOGGER.info("nombre: "+nombre);
         LOGGER.info(String.format("email: %s",email));
@@ -101,10 +101,13 @@ public class AltaServlet extends HttpServlet {
             request.setAttribute("mensaje","Majete!!! rellena el nombre que es obligatorio!!!!");
             //request.setAttribute("tecnologias",leerFichero("/WEB-INF/datos/tecnologias.txt"));
             request.setAttribute("tecnologias",tecnologias);
-            request.setAttribute("email",email);
+            //request.setAttribute("email",email);
             request.setAttribute("tecnologia",tecnologia);
+
             //request.setAttribute("nivel",nivel);
-            request.setAttribute("niveles",niveles);
+
+            request.setAttribute("niveles",List.of(niveles));
+
             request.getRequestDispatcher("/formulario.jsp").forward(request,response);
             return;
         }
